@@ -147,12 +147,10 @@ export default function sortableContainer(
 
         for (const key in this.events) {
           if (this.events.hasOwnProperty(key)) {
+            let eventTarget = this.getEventTarget(this.container, key);
+
             events[key].forEach((eventName) =>
-              this.container.addEventListener(
-                eventName,
-                this.events[key],
-                false,
-              ),
+              eventTarget.addEventListener(eventName, this.events[key], false),
             );
           }
         }
@@ -160,16 +158,26 @@ export default function sortableContainer(
     }
 
     componentWillUnmount() {
-      if (this.container) {
-        for (const key in this.events) {
-          if (this.events.hasOwnProperty(key)) {
-            events[key].forEach((eventName) =>
-              this.container.removeEventListener(eventName, this.events[key]),
-            );
-          }
+      for (const key in this.events) {
+        if (this.events.hasOwnProperty(key)) {
+          let eventTarget = this.getEventTarget(this.container, key);
+
+          events[key].forEach(
+            (eventName) =>
+              eventTarget &&
+              eventTarget.removeEventListener(eventName, this.events[key]),
+          );
         }
       }
     }
+
+    getEventTarget = (container, key) => {
+      if (key === 'start') {
+        return container;
+      }
+
+      return window;
+    };
 
     handleStart = (event) => {
       const {distance, shouldCancelStart} = this.props;
