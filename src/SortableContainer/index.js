@@ -17,6 +17,7 @@ import {
   provideDisplayName,
   omit,
 } from '../utils';
+import SortableElementContext from '../contexts/SortableElementContext';
 
 export default function sortableContainer(
   WrappedComponent,
@@ -115,11 +116,7 @@ export default function sortableContainer(
       disableAutoscroll: PropTypes.bool,
     };
 
-    static childContextTypes = {
-      manager: PropTypes.object.isRequired,
-    };
-
-    getChildContext() {
+    getContext() {
       return {
         manager: this.manager,
       };
@@ -898,34 +895,36 @@ export default function sortableContainer(
       const ref = config.withRef ? 'wrappedInstance' : null;
 
       return (
-        <WrappedComponent
-          ref={ref}
-          {...omit(
-            this.props,
-            'contentWindow',
-            'useWindowAsScrollContainer',
-            'distance',
-            'helperClass',
-            'hideSortableGhost',
-            'transitionDuration',
-            'useDragHandle',
-            'pressDelay',
-            'pressThreshold',
-            'shouldCancelStart',
-            'updateBeforeSortStart',
-            'onSortStart',
-            'onSortMove',
-            'onSortEnd',
-            'axis',
-            'lockAxis',
-            'lockOffset',
-            'lockToContainerEdges',
-            'getContainer',
-            'getHelperDimensions',
-            'helperContainer',
-            'disableAutoscroll',
-          )}
-        />
+        <SortableElementContext.Provider value={ this.getContext() }>
+          <WrappedComponent
+            ref={ ref }
+            { ...omit(
+              this.props,
+              'contentWindow',
+              'useWindowAsScrollContainer',
+              'distance',
+              'helperClass',
+              'hideSortableGhost',
+              'transitionDuration',
+              'useDragHandle',
+              'pressDelay',
+              'pressThreshold',
+              'shouldCancelStart',
+              'updateBeforeSortStart',
+              'onSortStart',
+              'onSortMove',
+              'onSortEnd',
+              'axis',
+              'lockAxis',
+              'lockOffset',
+              'lockToContainerEdges',
+              'getContainer',
+              'getHelperDimensions',
+              'helperContainer',
+              'disableAutoscroll',
+            ) }
+          />
+        </SortableElementContext.Provider>
       );
     }
 

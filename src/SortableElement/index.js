@@ -4,6 +4,7 @@ import {findDOMNode} from 'react-dom';
 import invariant from 'invariant';
 
 import {provideDisplayName, omit} from '../utils';
+import SortableElementContext from '../contexts/SortableElementContext';
 
 export default function sortableElement(
   WrappedComponent,
@@ -15,9 +16,7 @@ export default function sortableElement(
       WrappedComponent,
     );
 
-    static contextTypes = {
-      manager: PropTypes.object.isRequired,
-    };
+    static contextType = SortableElementContext;
 
     static propTypes = {
       index: PropTypes.number.isRequired,
