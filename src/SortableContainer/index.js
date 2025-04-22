@@ -39,6 +39,7 @@ export default function sortableContainer(
       );
 
       this.state = {};
+      this.wrappedInstanceRef = React.createRef();
     }
 
     static displayName = provideDisplayName('sortableList', WrappedComponent);
@@ -880,10 +881,10 @@ export default function sortableContainer(
     }
 
     getContainer() {
-      const {getContainer} = this.props;
+      const { getContainer } = this.props;
 
       if (typeof getContainer !== 'function') {
-        return findDOMNode(this);
+        return this.wrappedInstanceRef.current;
       }
 
       return getContainer(
@@ -892,7 +893,7 @@ export default function sortableContainer(
     }
 
     render() {
-      const ref = config.withRef ? 'wrappedInstance' : null;
+      const ref = config.withRef ? this.wrappedInstanceRef : null;
 
       return (
         <SortableElementContext.Provider value={ this.getContext() }>

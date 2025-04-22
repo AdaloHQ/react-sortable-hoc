@@ -1,20 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {findDOMNode} from 'react-dom';
 import invariant from 'invariant';
 
-import {provideDisplayName, omit} from '../utils';
+import { provideDisplayName, omit } from '../utils';
 import SortableElementContext from '../contexts/SortableElementContext';
 
 export default function sortableElement(
   WrappedComponent,
-  config = {withRef: false},
+  config = { withRef: false },
 ) {
   return class WithSortableElement extends React.Component {
-    static displayName = provideDisplayName(
-      'sortableElement',
-      WrappedComponent,
-    );
+    static displayName = provideDisplayName('sortableElement', WrappedComponent);
 
     static contextType = SortableElementContext;
 
@@ -28,34 +24,39 @@ export default function sortableElement(
       collection: 0,
     };
 
+    constructor(props) {
+      super(props);
+      this.wrappedInstanceRef = React.createRef();
+    }
+
     componentDidMount() {
-      const {collection, disabled, index} = this.props;
+      const { collection, disabled, index } = this.props;
 
       if (!disabled) {
         this.setDraggable(collection, index);
       }
     }
 
-    componentWillReceiveProps(nextProps) {
-      if (this.props.index !== nextProps.index && this.node) {
-        this.node.sortableInfo.index = nextProps.index;
+    componentDidUpdate(prevProps) {
+      if (this.props.index !== prevProps.index && this.node) {
+        this.node.sortableInfo.index = this.props.index;
       }
 
-      if (this.props.disabled !== nextProps.disabled) {
-        const {collection, disabled, index} = nextProps;
+      if (this.props.disabled !== prevProps.disabled) {
+        const { collection, disabled, index } = this.props;
         if (disabled) {
           this.removeDraggable(collection);
         } else {
           this.setDraggable(collection, index);
         }
-      } else if (this.props.collection !== nextProps.collection) {
-        this.removeDraggable(this.props.collection);
-        this.setDraggable(nextProps.collection, nextProps.index);
+      } else if (this.props.collection !== prevProps.collection) {
+        this.removeDraggable(prevProps.collection);
+        this.setDraggable(this.props.collection, this.props.index);
       }
     }
 
     componentWillUnmount() {
-      const {collection, disabled} = this.props;
+      const { collection, disabled } = this.props;
 
       if (!disabled) {
         this.removeDraggable(collection);
@@ -63,7 +64,7 @@ export default function sortableElement(
     }
 
     setDraggable(collection, index) {
-      const node = findDOMNode(this);
+      const node = this.wrappedInstanceRef.current;
 
       node.sortableInfo = {
         index,
@@ -72,7 +73,7 @@ export default function sortableElement(
       };
 
       this.node = node;
-      this.ref = {node};
+      this.ref = { node };
       this.context.manager.add(collection, this.ref);
     }
 
@@ -85,11 +86,11 @@ export default function sortableElement(
         config.withRef,
         'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableElement() call',
       );
-      return this.refs.wrappedInstance;
+      return this.wrappedInstanceRef.current;
     }
 
     render() {
-      const ref = config.withRef ? 'wrappedInstance' : null;
+      const ref = config.withRef ? this.wrappedInstanceRef : null;
 
       return (
         <WrappedComponent

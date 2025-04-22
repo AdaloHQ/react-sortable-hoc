@@ -1,19 +1,25 @@
 import * as React from 'react';
-import {findDOMNode} from 'react-dom';
 import invariant from 'invariant';
 
-import {provideDisplayName} from '../utils';
+import { provideDisplayName } from '../utils';
 
 export default function sortableHandle(
   WrappedComponent,
-  config = {withRef: false},
+  config = { withRef: false },
 ) {
   return class WithSortableHandle extends React.Component {
     static displayName = provideDisplayName('sortableHandle', WrappedComponent);
 
+    constructor(props) {
+      super(props);
+      this.wrappedInstanceRef = React.createRef();
+    }
+
     componentDidMount() {
-      const node = findDOMNode(this);
-      node.sortableHandle = true;
+      const node = this.wrappedInstanceRef.current;
+      if (node) {
+        node.sortableHandle = true;
+      }
     }
 
     getWrappedInstance() {
@@ -21,11 +27,11 @@ export default function sortableHandle(
         config.withRef,
         'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableHandle() call',
       );
-      return this.refs.wrappedInstance;
+      return this.wrappedInstanceRef.current;
     }
 
     render() {
-      const ref = config.withRef ? 'wrappedInstance' : null;
+      const ref = config.withRef ? this.wrappedInstanceRef : null;
 
       return <WrappedComponent ref={ref} {...this.props} />;
     }

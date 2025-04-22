@@ -255,11 +255,13 @@ class TableWrapper extends Component {
       width,
     } = this.props;
 
+    // Create a ref for the SortableTable
+    const tableRef = React.createRef();
+
     return (
       <SortableTable
-        getContainer={(wrappedInstance) =>
-          ReactDOM.findDOMNode(wrappedInstance.Grid)
-        }
+        ref={tableRef}
+        getContainer={() => tableRef.current?.Grid}
         gridClassName={className}
         headerHeight={itemHeight}
         height={height}
@@ -267,7 +269,7 @@ class TableWrapper extends Component {
         onSortEnd={onSortEnd}
         rowClassName={itemClass}
         rowCount={items.length}
-        rowGetter={({index}) => items[index]}
+        rowGetter={({ index }) => items[index]}
         rowHeight={itemHeight}
         rowRenderer={(props) => <SortableRowRenderer {...props} />}
         width={width}
