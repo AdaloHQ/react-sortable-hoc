@@ -9,19 +9,23 @@
     : typeof define === 'function' && define.amd
     ? define(['exports', 'react', 'prop-types', 'react-dom'], factory)
     : ((global = global || self),
-      factory(
-        (global.SortableHOC = {}),
-        global.React,
-        global.PropTypes,
-        global.ReactDOM,
-      ));
-})(this, function(exports, React, PropTypes, reactDom) {
+      factory((global.SortableHOC = {}), global.React, global.PropTypes));
+})(this, function(exports, React, PropTypes) {
   'use strict';
 
+  var React__default = 'default' in React ? React['default'] : React;
   PropTypes =
     PropTypes && PropTypes.hasOwnProperty('default')
       ? PropTypes['default']
       : PropTypes;
+
+  function unwrapExports(x) {
+    return x &&
+      x.__esModule &&
+      Object.prototype.hasOwnProperty.call(x, 'default')
+      ? x.default
+      : x;
+  }
 
   function createCommonjsModule(fn, module) {
     return (module = {exports: {}}), fn(module, module.exports), module.exports;
@@ -29,269 +33,429 @@
 
   var _extends_1 = createCommonjsModule(function(module) {
     function _extends() {
-      module.exports = _extends =
-        Object.assign ||
-        function(target) {
-          for (var i = 1; i < arguments.length; i++) {
-            var source = arguments[i];
-
-            for (var key in source) {
-              if (Object.prototype.hasOwnProperty.call(source, key)) {
-                target[key] = source[key];
+      return (
+        (module.exports = _extends = Object.assign
+          ? Object.assign.bind()
+          : function(n) {
+              for (var e = 1; e < arguments.length; e++) {
+                var t = arguments[e];
+                for (var r in t)
+                  ({}.hasOwnProperty.call(t, r) && (n[r] = t[r]));
               }
-            }
-          }
-
-          return target;
-        };
-
-      return _extends.apply(this, arguments);
-    }
-
-    module.exports = _extends;
-  });
-
-  function _arrayWithHoles(arr) {
-    if (Array.isArray(arr)) return arr;
-  }
-
-  var arrayWithHoles = _arrayWithHoles;
-
-  function _iterableToArrayLimit(arr, i) {
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-
-    try {
-      for (
-        var _i = arr[Symbol.iterator](), _s;
-        !(_n = (_s = _i.next()).done);
-        _n = true
-      ) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i['return'] != null) _i['return']();
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-
-    return _arr;
-  }
-
-  var iterableToArrayLimit = _iterableToArrayLimit;
-
-  function _nonIterableRest() {
-    throw new TypeError('Invalid attempt to destructure non-iterable instance');
-  }
-
-  var nonIterableRest = _nonIterableRest;
-
-  function _slicedToArray(arr, i) {
-    return (
-      arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || nonIterableRest()
-    );
-  }
-
-  var slicedToArray = _slicedToArray;
-
-  function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
-        arr2[i] = arr[i];
-      }
-
-      return arr2;
-    }
-  }
-
-  var arrayWithoutHoles = _arrayWithoutHoles;
-
-  function _iterableToArray(iter) {
-    if (
-      Symbol.iterator in Object(iter) ||
-      Object.prototype.toString.call(iter) === '[object Arguments]'
-    )
-      return Array.from(iter);
-  }
-
-  var iterableToArray = _iterableToArray;
-
-  function _nonIterableSpread() {
-    throw new TypeError('Invalid attempt to spread non-iterable instance');
-  }
-
-  var nonIterableSpread = _nonIterableSpread;
-
-  function _toConsumableArray(arr) {
-    return (
-      arrayWithoutHoles(arr) || iterableToArray(arr) || nonIterableSpread()
-    );
-  }
-
-  var toConsumableArray = _toConsumableArray;
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
-    }
-  }
-
-  var classCallCheck = _classCallCheck;
-
-  function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ('value' in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-  }
-
-  var createClass = _createClass;
-
-  var _typeof_1 = createCommonjsModule(function(module) {
-    function _typeof2(obj) {
-      if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
-        _typeof2 = function _typeof2(obj) {
-          return typeof obj;
-        };
-      } else {
-        _typeof2 = function _typeof2(obj) {
-          return obj &&
-            typeof Symbol === 'function' &&
-            obj.constructor === Symbol &&
-            obj !== Symbol.prototype
-            ? 'symbol'
-            : typeof obj;
-        };
-      }
-      return _typeof2(obj);
-    }
-
-    function _typeof(obj) {
-      if (
-        typeof Symbol === 'function' &&
-        _typeof2(Symbol.iterator) === 'symbol'
-      ) {
-        module.exports = _typeof = function _typeof(obj) {
-          return _typeof2(obj);
-        };
-      } else {
-        module.exports = _typeof = function _typeof(obj) {
-          return obj &&
-            typeof Symbol === 'function' &&
-            obj.constructor === Symbol &&
-            obj !== Symbol.prototype
-            ? 'symbol'
-            : _typeof2(obj);
-        };
-      }
-
-      return _typeof(obj);
-    }
-
-    module.exports = _typeof;
-  });
-
-  function _assertThisInitialized(self) {
-    if (self === void 0) {
-      throw new ReferenceError(
-        "this hasn't been initialised - super() hasn't been called",
+              return n;
+            }),
+        (module.exports.__esModule = true),
+        (module.exports['default'] = module.exports),
+        _extends.apply(null, arguments)
       );
     }
+    (module.exports = _extends),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
 
-    return self;
-  }
+  var _extends = unwrapExports(_extends_1);
 
-  var assertThisInitialized = _assertThisInitialized;
-
-  function _possibleConstructorReturn(self, call) {
-    if (call && (_typeof_1(call) === 'object' || typeof call === 'function')) {
-      return call;
+  var arrayWithHoles = createCommonjsModule(function(module) {
+    function _arrayWithHoles(r) {
+      if (Array.isArray(r)) return r;
     }
+    (module.exports = _arrayWithHoles),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
 
-    return assertThisInitialized(self);
-  }
+  unwrapExports(arrayWithHoles);
 
-  var possibleConstructorReturn = _possibleConstructorReturn;
+  var iterableToArrayLimit = createCommonjsModule(function(module) {
+    function _iterableToArrayLimit(r, l) {
+      var t =
+        null == r
+          ? null
+          : ('undefined' != typeof Symbol && r[Symbol.iterator]) ||
+            r['@@iterator'];
+      if (null != t) {
+        var e,
+          n,
+          i,
+          u,
+          a = [],
+          f = !0,
+          o = !1;
+        try {
+          if (((i = (t = t.call(r)).next), 0 === l)) {
+            if (Object(t) !== t) return;
+            f = !1;
+          } else
+            for (
+              ;
+              !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l);
+              f = !0
+            );
+        } catch (r) {
+          (o = !0), (n = r);
+        } finally {
+          try {
+            if (
+              !f &&
+              null != t['return'] &&
+              ((u = t['return']()), Object(u) !== u)
+            )
+              return;
+          } finally {
+            if (o) throw n;
+          }
+        }
+        return a;
+      }
+    }
+    (module.exports = _iterableToArrayLimit),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(iterableToArrayLimit);
+
+  var arrayLikeToArray = createCommonjsModule(function(module) {
+    function _arrayLikeToArray(r, a) {
+      (null == a || a > r.length) && (a = r.length);
+      for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+      return n;
+    }
+    (module.exports = _arrayLikeToArray),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(arrayLikeToArray);
+
+  var unsupportedIterableToArray = createCommonjsModule(function(module) {
+    function _unsupportedIterableToArray(r, a) {
+      if (r) {
+        if ('string' == typeof r) return arrayLikeToArray(r, a);
+        var t = {}.toString.call(r).slice(8, -1);
+        return (
+          'Object' === t && r.constructor && (t = r.constructor.name),
+          'Map' === t || 'Set' === t
+            ? Array.from(r)
+            : 'Arguments' === t ||
+              /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t)
+            ? arrayLikeToArray(r, a)
+            : void 0
+        );
+      }
+    }
+    (module.exports = _unsupportedIterableToArray),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(unsupportedIterableToArray);
+
+  var nonIterableRest = createCommonjsModule(function(module) {
+    function _nonIterableRest() {
+      throw new TypeError(
+        'Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.',
+      );
+    }
+    (module.exports = _nonIterableRest),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(nonIterableRest);
+
+  var slicedToArray = createCommonjsModule(function(module) {
+    function _slicedToArray(r, e) {
+      return (
+        arrayWithHoles(r) ||
+        iterableToArrayLimit(r, e) ||
+        unsupportedIterableToArray(r, e) ||
+        nonIterableRest()
+      );
+    }
+    (module.exports = _slicedToArray),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  var _slicedToArray = unwrapExports(slicedToArray);
+
+  var arrayWithoutHoles = createCommonjsModule(function(module) {
+    function _arrayWithoutHoles(r) {
+      if (Array.isArray(r)) return arrayLikeToArray(r);
+    }
+    (module.exports = _arrayWithoutHoles),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(arrayWithoutHoles);
+
+  var iterableToArray = createCommonjsModule(function(module) {
+    function _iterableToArray(r) {
+      if (
+        ('undefined' != typeof Symbol && null != r[Symbol.iterator]) ||
+        null != r['@@iterator']
+      )
+        return Array.from(r);
+    }
+    (module.exports = _iterableToArray),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(iterableToArray);
+
+  var nonIterableSpread = createCommonjsModule(function(module) {
+    function _nonIterableSpread() {
+      throw new TypeError(
+        'Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.',
+      );
+    }
+    (module.exports = _nonIterableSpread),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(nonIterableSpread);
+
+  var toConsumableArray = createCommonjsModule(function(module) {
+    function _toConsumableArray(r) {
+      return (
+        arrayWithoutHoles(r) ||
+        iterableToArray(r) ||
+        unsupportedIterableToArray(r) ||
+        nonIterableSpread()
+      );
+    }
+    (module.exports = _toConsumableArray),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  var _toConsumableArray = unwrapExports(toConsumableArray);
+
+  var classCallCheck = createCommonjsModule(function(module) {
+    function _classCallCheck(a, n) {
+      if (!(a instanceof n))
+        throw new TypeError('Cannot call a class as a function');
+    }
+    (module.exports = _classCallCheck),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  var _classCallCheck = unwrapExports(classCallCheck);
+
+  var _typeof_1 = createCommonjsModule(function(module) {
+    function _typeof(o) {
+      '@babel/helpers - typeof';
+
+      return (
+        (module.exports = _typeof =
+          'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+            ? function(o) {
+                return typeof o;
+              }
+            : function(o) {
+                return o &&
+                  'function' == typeof Symbol &&
+                  o.constructor === Symbol &&
+                  o !== Symbol.prototype
+                  ? 'symbol'
+                  : typeof o;
+              }),
+        (module.exports.__esModule = true),
+        (module.exports['default'] = module.exports),
+        _typeof(o)
+      );
+    }
+    (module.exports = _typeof),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(_typeof_1);
+
+  var toPrimitive_1 = createCommonjsModule(function(module) {
+    var _typeof = _typeof_1['default'];
+    function toPrimitive(t, r) {
+      if ('object' != _typeof(t) || !t) return t;
+      var e = t[Symbol.toPrimitive];
+      if (void 0 !== e) {
+        var i = e.call(t, r || 'default');
+        if ('object' != _typeof(i)) return i;
+        throw new TypeError('@@toPrimitive must return a primitive value.');
+      }
+      return ('string' === r ? String : Number)(t);
+    }
+    (module.exports = toPrimitive),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(toPrimitive_1);
+
+  var toPropertyKey_1 = createCommonjsModule(function(module) {
+    var _typeof = _typeof_1['default'];
+
+    function toPropertyKey(t) {
+      var i = toPrimitive_1(t, 'string');
+      return 'symbol' == _typeof(i) ? i : i + '';
+    }
+    (module.exports = toPropertyKey),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  unwrapExports(toPropertyKey_1);
+
+  var createClass = createCommonjsModule(function(module) {
+    function _defineProperties(e, r) {
+      for (var t = 0; t < r.length; t++) {
+        var o = r[t];
+        (o.enumerable = o.enumerable || !1),
+          (o.configurable = !0),
+          'value' in o && (o.writable = !0),
+          Object.defineProperty(e, toPropertyKey_1(o.key), o);
+      }
+    }
+    function _createClass(e, r, t) {
+      return (
+        r && _defineProperties(e.prototype, r),
+        t && _defineProperties(e, t),
+        Object.defineProperty(e, 'prototype', {
+          writable: !1,
+        }),
+        e
+      );
+    }
+    (module.exports = _createClass),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  var _createClass = unwrapExports(createClass);
+
+  var assertThisInitialized = createCommonjsModule(function(module) {
+    function _assertThisInitialized(e) {
+      if (void 0 === e)
+        throw new ReferenceError(
+          "this hasn't been initialised - super() hasn't been called",
+        );
+      return e;
+    }
+    (module.exports = _assertThisInitialized),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  var _assertThisInitialized = unwrapExports(assertThisInitialized);
+
+  var possibleConstructorReturn = createCommonjsModule(function(module) {
+    var _typeof = _typeof_1['default'];
+
+    function _possibleConstructorReturn(t, e) {
+      if (e && ('object' == _typeof(e) || 'function' == typeof e)) return e;
+      if (void 0 !== e)
+        throw new TypeError(
+          'Derived constructors may only return object or undefined',
+        );
+      return assertThisInitialized(t);
+    }
+    (module.exports = _possibleConstructorReturn),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
+
+  var _possibleConstructorReturn = unwrapExports(possibleConstructorReturn);
 
   var getPrototypeOf = createCommonjsModule(function(module) {
-    function _getPrototypeOf(o) {
-      module.exports = _getPrototypeOf = Object.setPrototypeOf
-        ? Object.getPrototypeOf
-        : function _getPrototypeOf(o) {
-            return o.__proto__ || Object.getPrototypeOf(o);
-          };
-      return _getPrototypeOf(o);
+    function _getPrototypeOf(t) {
+      return (
+        (module.exports = _getPrototypeOf = Object.setPrototypeOf
+          ? Object.getPrototypeOf.bind()
+          : function(t) {
+              return t.__proto__ || Object.getPrototypeOf(t);
+            }),
+        (module.exports.__esModule = true),
+        (module.exports['default'] = module.exports),
+        _getPrototypeOf(t)
+      );
     }
-
-    module.exports = _getPrototypeOf;
+    (module.exports = _getPrototypeOf),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
   });
+
+  var _getPrototypeOf = unwrapExports(getPrototypeOf);
 
   var setPrototypeOf = createCommonjsModule(function(module) {
-    function _setPrototypeOf(o, p) {
-      module.exports = _setPrototypeOf =
-        Object.setPrototypeOf ||
-        function _setPrototypeOf(o, p) {
-          o.__proto__ = p;
-          return o;
-        };
-
-      return _setPrototypeOf(o, p);
+    function _setPrototypeOf(t, e) {
+      return (
+        (module.exports = _setPrototypeOf = Object.setPrototypeOf
+          ? Object.setPrototypeOf.bind()
+          : function(t, e) {
+              return (t.__proto__ = e), t;
+            }),
+        (module.exports.__esModule = true),
+        (module.exports['default'] = module.exports),
+        _setPrototypeOf(t, e)
+      );
     }
-
-    module.exports = _setPrototypeOf;
+    (module.exports = _setPrototypeOf),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
   });
 
-  function _inherits(subClass, superClass) {
-    if (typeof superClass !== 'function' && superClass !== null) {
-      throw new TypeError('Super expression must either be null or a function');
+  unwrapExports(setPrototypeOf);
+
+  var inherits = createCommonjsModule(function(module) {
+    function _inherits(t, e) {
+      if ('function' != typeof e && null !== e)
+        throw new TypeError(
+          'Super expression must either be null or a function',
+        );
+      (t.prototype = Object.create(e && e.prototype, {
+        constructor: {
+          value: t,
+          writable: !0,
+          configurable: !0,
+        },
+      })),
+        Object.defineProperty(t, 'prototype', {
+          writable: !1,
+        }),
+        e && setPrototypeOf(t, e);
     }
+    (module.exports = _inherits),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
 
-    subClass.prototype = Object.create(superClass && superClass.prototype, {
-      constructor: {
-        value: subClass,
-        writable: true,
-        configurable: true,
-      },
-    });
-    if (superClass) setPrototypeOf(subClass, superClass);
-  }
+  var _inherits = unwrapExports(inherits);
 
-  var inherits = _inherits;
-
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true,
-      });
-    } else {
-      obj[key] = value;
+  var defineProperty = createCommonjsModule(function(module) {
+    function _defineProperty(e, r, t) {
+      return (
+        (r = toPropertyKey_1(r)) in e
+          ? Object.defineProperty(e, r, {
+              value: t,
+              enumerable: !0,
+              configurable: !0,
+              writable: !0,
+            })
+          : (e[r] = t),
+        e
+      );
     }
+    (module.exports = _defineProperty),
+      (module.exports.__esModule = true),
+      (module.exports['default'] = module.exports);
+  });
 
-    return obj;
-  }
-
-  var defineProperty = _defineProperty;
+  var _defineProperty = unwrapExports(defineProperty);
 
   /**
    * Copyright (c) 2013-present, Facebook, Inc.
@@ -347,12 +511,12 @@
 
   var Manager = (function() {
     function Manager() {
-      classCallCheck(this, Manager);
+      _classCallCheck(this, Manager);
 
-      defineProperty(this, 'refs', {});
+      _defineProperty(this, 'refs', {});
     }
 
-    createClass(Manager, [
+    _createClass(Manager, [
       {
         key: 'add',
         value: function add(collection, ref) {
@@ -592,6 +756,8 @@
     };
   }
 
+  var SortableElementContext = React__default.createContext({});
+
   function _finallyRethrows(body, finalizer) {
     try {
       var result = body();
@@ -619,20 +785,20 @@
           };
     return (
       (_temp = _class = (function(_React$Component) {
-        inherits(WithSortableContainer, _React$Component);
+        _inherits(WithSortableContainer, _React$Component);
 
         function WithSortableContainer(props) {
           var _this;
 
-          classCallCheck(this, WithSortableContainer);
+          _classCallCheck(this, WithSortableContainer);
 
-          _this = possibleConstructorReturn(
+          _this = _possibleConstructorReturn(
             this,
-            getPrototypeOf(WithSortableContainer).call(this, props),
+            _getPrototypeOf(WithSortableContainer).call(this, props),
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'getEventTarget',
             function(container, key) {
               if (key === 'start') {
@@ -643,8 +809,8 @@
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'handleStart',
             function(event) {
               var _this$props = _this.props,
@@ -706,16 +872,16 @@
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'nodeIsChild',
             function(node) {
               return node.sortableInfo.manager === _this.manager;
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'handleMove',
             function(event) {
               var _this$props2 = _this.props,
@@ -753,8 +919,8 @@
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'handleEnd',
             function() {
               _this._touched = false;
@@ -763,8 +929,8 @@
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'cancel',
             function() {
               var distance = _this.props.distance;
@@ -780,8 +946,8 @@
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'handlePress',
             function(event) {
               try {
@@ -833,7 +999,7 @@
 
                       var clonedNode = _node.cloneNode(true);
 
-                      var clonedFields = toConsumableArray(
+                      var clonedFields = _toConsumableArray(
                         clonedNode.querySelectorAll('input, textarea, select'),
                       );
 
@@ -906,7 +1072,7 @@
                         (_this$helper$classLis =
                           _this.helper.classList).add.apply(
                           _this$helper$classLis,
-                          toConsumableArray(_helperClass.split(' ')),
+                          _toConsumableArray(_helperClass.split(' ')),
                         );
                       }
 
@@ -1003,8 +1169,8 @@
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'handleSortMove',
             function(event) {
               var onSortMove = _this.props.onSortMove;
@@ -1022,8 +1188,8 @@
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'handleSortEnd',
             function(event) {
               var _this$props4 = _this.props,
@@ -1087,10 +1253,16 @@
             },
           );
 
-          defineProperty(
-            assertThisInitialized(assertThisInitialized(_this)),
+          _defineProperty(
+            _assertThisInitialized(_assertThisInitialized(_this)),
             'autoscroll',
             function() {
+              var disableAutoscroll = _this.props.disableAutoscroll;
+
+              if (disableAutoscroll) {
+                return;
+              }
+
               var translate = _this.translate;
               var direction = {
                 x: 0,
@@ -1104,8 +1276,22 @@
                 x: 10,
                 y: 10,
               };
+              var _this$scrollContainer = _this.scrollContainer,
+                scrollTop = _this$scrollContainer.scrollTop,
+                scrollLeft = _this$scrollContainer.scrollLeft,
+                scrollHeight = _this$scrollContainer.scrollHeight,
+                scrollWidth = _this$scrollContainer.scrollWidth,
+                clientHeight = _this$scrollContainer.clientHeight,
+                clientWidth = _this$scrollContainer.clientWidth;
+              var isTop = scrollTop === 0;
+              var isBottom = scrollHeight - scrollTop - clientHeight === 0;
+              var isLeft = scrollLeft === 0;
+              var isRight = scrollWidth - scrollLeft - clientWidth === 0;
 
-              if (translate.y >= _this.maxTranslate.y - _this.height / 2) {
+              if (
+                translate.y >= _this.maxTranslate.y - _this.height / 2 &&
+                !isBottom
+              ) {
                 direction.y = 1;
                 speed.y =
                   acceleration.y *
@@ -1114,8 +1300,8 @@
                       _this.height,
                   );
               } else if (
-                translate.x >=
-                _this.maxTranslate.x - _this.width / 2
+                translate.x >= _this.maxTranslate.x - _this.width / 2 &&
+                !isRight
               ) {
                 direction.x = 1;
                 speed.x =
@@ -1125,8 +1311,8 @@
                       _this.width,
                   );
               } else if (
-                translate.y <=
-                _this.minTranslate.y + _this.height / 2
+                translate.y <= _this.minTranslate.y + _this.height / 2 &&
+                !isTop
               ) {
                 direction.y = -1;
                 speed.y =
@@ -1136,8 +1322,8 @@
                       _this.height,
                   );
               } else if (
-                translate.x <=
-                _this.minTranslate.x + _this.width / 2
+                translate.x <= _this.minTranslate.x + _this.width / 2 &&
+                !isLeft
               ) {
                 direction.x = -1;
                 speed.x =
@@ -1183,13 +1369,14 @@
             'Attempted to set both `pressDelay` and `distance` on SortableContainer, you may only use one or the other, not both at the same time.',
           );
           _this.state = {};
+          _this.wrappedInstanceRef = React.createRef();
           return _this;
         }
 
-        createClass(WithSortableContainer, [
+        _createClass(WithSortableContainer, [
           {
-            key: 'getChildContext',
-            value: function getChildContext() {
+            key: 'getContext',
+            value: function getContext() {
               return {
                 manager: this.manager,
               };
@@ -1287,7 +1474,7 @@
                 lockOffset,
               );
 
-              var _offsets = slicedToArray(offsets, 2),
+              var _offsets = _slicedToArray(offsets, 2),
                 minLockOffset = _offsets[0],
                 maxLockOffset = _offsets[1];
 
@@ -1322,7 +1509,7 @@
 
               if (lockToContainerEdges) {
                 var _this$getLockPixelOff = this.getLockPixelOffsets(),
-                  _this$getLockPixelOff2 = slicedToArray(
+                  _this$getLockPixelOff2 = _slicedToArray(
                     _this$getLockPixelOff,
                     2,
                   ),
@@ -1458,9 +1645,12 @@
                         edgeOffset.left + translate.x >
                         this.containerBoundingRect.width - offset.width
                       ) {
-                        translate.x =
-                          nextNode.edgeOffset.left - edgeOffset.left;
-                        translate.y = nextNode.edgeOffset.top - edgeOffset.top;
+                        if (nextNode) {
+                          translate.x =
+                            nextNode.edgeOffset.left - edgeOffset.left;
+                          translate.y =
+                            nextNode.edgeOffset.top - edgeOffset.top;
+                        }
                       }
 
                       if (this.newIndex === null) {
@@ -1487,9 +1677,12 @@
                         edgeOffset.left + translate.x <
                         this.containerBoundingRect.left + offset.width
                       ) {
-                        translate.x =
-                          prevNode.edgeOffset.left - edgeOffset.left;
-                        translate.y = prevNode.edgeOffset.top - edgeOffset.top;
+                        if (prevNode) {
+                          translate.x =
+                            prevNode.edgeOffset.left - edgeOffset.left;
+                          translate.y =
+                            prevNode.edgeOffset.top - edgeOffset.top;
+                        }
                       }
 
                       this.newIndex = _index2;
@@ -1574,7 +1767,7 @@
               var getContainer = this.props.getContainer;
 
               if (typeof getContainer !== 'function') {
-                return reactDom.findDOMNode(this);
+                return this.wrappedInstanceRef.current;
               }
 
               return getContainer(
@@ -1585,35 +1778,43 @@
           {
             key: 'render',
             value: function render() {
-              var ref = config.withRef ? 'wrappedInstance' : null;
+              var ref = config.withRef ? this.wrappedInstanceRef : null;
               return React.createElement(
-                WrappedComponent,
-                _extends_1(
-                  {
-                    ref: ref,
-                  },
-                  omit(
-                    this.props,
-                    'contentWindow',
-                    'useWindowAsScrollContainer',
-                    'distance',
-                    'helperClass',
-                    'hideSortableGhost',
-                    'transitionDuration',
-                    'useDragHandle',
-                    'pressDelay',
-                    'pressThreshold',
-                    'shouldCancelStart',
-                    'updateBeforeSortStart',
-                    'onSortStart',
-                    'onSortMove',
-                    'onSortEnd',
-                    'axis',
-                    'lockAxis',
-                    'lockOffset',
-                    'lockToContainerEdges',
-                    'getContainer',
-                    'getHelperDimensions',
+                SortableElementContext.Provider,
+                {
+                  value: this.getContext(),
+                },
+                React.createElement(
+                  WrappedComponent,
+                  _extends(
+                    {
+                      ref: ref,
+                    },
+                    omit(
+                      this.props,
+                      'contentWindow',
+                      'useWindowAsScrollContainer',
+                      'distance',
+                      'helperClass',
+                      'hideSortableGhost',
+                      'transitionDuration',
+                      'useDragHandle',
+                      'pressDelay',
+                      'pressThreshold',
+                      'shouldCancelStart',
+                      'updateBeforeSortStart',
+                      'onSortStart',
+                      'onSortMove',
+                      'onSortEnd',
+                      'axis',
+                      'lockAxis',
+                      'lockOffset',
+                      'lockToContainerEdges',
+                      'getContainer',
+                      'getHelperDimensions',
+                      'helperContainer',
+                      'disableAutoscroll',
+                    ),
                   ),
                 ),
               );
@@ -1622,6 +1823,12 @@
           {
             key: 'helperContainer',
             get: function get() {
+              var helperContainer = this.props.helperContainer;
+
+              if (typeof helperContainer === 'function') {
+                return helperContainer();
+              }
+
               return this.props.helperContainer || this.document.body;
             },
           },
@@ -1629,12 +1836,12 @@
 
         return WithSortableContainer;
       })(React.Component)),
-      defineProperty(
+      _defineProperty(
         _class,
         'displayName',
         provideDisplayName('sortableList', WrappedComponent),
       ),
-      defineProperty(_class, 'defaultProps', {
+      _defineProperty(_class, 'defaultProps', {
         axis: 'y',
         transitionDuration: 300,
         pressDelay: 0,
@@ -1668,8 +1875,9 @@
             height: node.offsetHeight,
           };
         },
+        disableAutoscroll: false,
       }),
-      defineProperty(_class, 'propTypes', {
+      _defineProperty(_class, 'propTypes', {
         axis: PropTypes.oneOf(['x', 'y', 'xy']),
         distance: PropTypes.number,
         lockAxis: PropTypes.string,
@@ -1697,13 +1905,13 @@
         ]),
         getContainer: PropTypes.func,
         getHelperDimensions: PropTypes.func,
-        helperContainer:
+        helperContainer: PropTypes.oneOfType([
+          PropTypes.func,
           typeof HTMLElement === 'undefined'
             ? PropTypes.any
             : PropTypes.instanceOf(HTMLElement),
-      }),
-      defineProperty(_class, 'childContextTypes', {
-        manager: PropTypes.object.isRequired,
+        ]),
+        disableAutoscroll: PropTypes.bool,
       }),
       _temp
     );
@@ -1720,18 +1928,22 @@
           };
     return (
       (_temp = _class = (function(_React$Component) {
-        inherits(WithSortableElement, _React$Component);
+        _inherits(WithSortableElement, _React$Component);
 
-        function WithSortableElement() {
-          classCallCheck(this, WithSortableElement);
+        function WithSortableElement(props) {
+          var _this;
 
-          return possibleConstructorReturn(
+          _classCallCheck(this, WithSortableElement);
+
+          _this = _possibleConstructorReturn(
             this,
-            getPrototypeOf(WithSortableElement).apply(this, arguments),
+            _getPrototypeOf(WithSortableElement).call(this, props),
           );
+          _this.wrappedInstanceRef = React.createRef();
+          return _this;
         }
 
-        createClass(WithSortableElement, [
+        _createClass(WithSortableElement, [
           {
             key: 'componentDidMount',
             value: function componentDidMount() {
@@ -1746,34 +1958,35 @@
             },
           },
           {
-            key: 'componentWillReceiveProps',
-            value: function componentWillReceiveProps(nextProps) {
-              if (this.props.index !== nextProps.index && this.node) {
-                this.node.sortableInfo.index = nextProps.index;
+            key: 'componentDidUpdate',
+            value: function componentDidUpdate(prevProps) {
+              if (this.props.index !== prevProps.index && this.node) {
+                this.node.sortableInfo.index = this.props.index;
               }
 
-              if (this.props.disabled !== nextProps.disabled) {
-                var collection = nextProps.collection,
-                  disabled = nextProps.disabled,
-                  index = nextProps.index;
+              if (this.props.disabled !== prevProps.disabled) {
+                var _this$props2 = this.props,
+                  collection = _this$props2.collection,
+                  disabled = _this$props2.disabled,
+                  index = _this$props2.index;
 
                 if (disabled) {
                   this.removeDraggable(collection);
                 } else {
                   this.setDraggable(collection, index);
                 }
-              } else if (this.props.collection !== nextProps.collection) {
-                this.removeDraggable(this.props.collection);
-                this.setDraggable(nextProps.collection, nextProps.index);
+              } else if (this.props.collection !== prevProps.collection) {
+                this.removeDraggable(prevProps.collection);
+                this.setDraggable(this.props.collection, this.props.index);
               }
             },
           },
           {
             key: 'componentWillUnmount',
             value: function componentWillUnmount() {
-              var _this$props2 = this.props,
-                collection = _this$props2.collection,
-                disabled = _this$props2.disabled;
+              var _this$props3 = this.props,
+                collection = _this$props3.collection,
+                disabled = _this$props3.disabled;
 
               if (!disabled) {
                 this.removeDraggable(collection);
@@ -1783,7 +1996,7 @@
           {
             key: 'setDraggable',
             value: function setDraggable(collection, index) {
-              var node = reactDom.findDOMNode(this);
+              var node = this.wrappedInstanceRef.current;
               node.sortableInfo = {
                 index: index,
                 collection: collection,
@@ -1809,16 +2022,16 @@
                 config.withRef,
                 'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableElement() call',
               );
-              return this.refs.wrappedInstance;
+              return this.wrappedInstanceRef.current;
             },
           },
           {
             key: 'render',
             value: function render() {
-              var ref = config.withRef ? 'wrappedInstance' : null;
+              var ref = config.withRef ? this.wrappedInstanceRef : null;
               return React.createElement(
                 WrappedComponent,
-                _extends_1(
+                _extends(
                   {
                     ref: ref,
                   },
@@ -1831,20 +2044,18 @@
 
         return WithSortableElement;
       })(React.Component)),
-      defineProperty(
+      _defineProperty(
         _class,
         'displayName',
         provideDisplayName('sortableElement', WrappedComponent),
       ),
-      defineProperty(_class, 'contextTypes', {
-        manager: PropTypes.object.isRequired,
-      }),
-      defineProperty(_class, 'propTypes', {
+      _defineProperty(_class, 'contextType', SortableElementContext),
+      _defineProperty(_class, 'propTypes', {
         index: PropTypes.number.isRequired,
         collection: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         disabled: PropTypes.bool,
       }),
-      defineProperty(_class, 'defaultProps', {
+      _defineProperty(_class, 'defaultProps', {
         collection: 0,
       }),
       _temp
@@ -1862,23 +2073,30 @@
           };
     return (
       (_temp = _class = (function(_React$Component) {
-        inherits(WithSortableHandle, _React$Component);
+        _inherits(WithSortableHandle, _React$Component);
 
-        function WithSortableHandle() {
-          classCallCheck(this, WithSortableHandle);
+        function WithSortableHandle(props) {
+          var _this;
 
-          return possibleConstructorReturn(
+          _classCallCheck(this, WithSortableHandle);
+
+          _this = _possibleConstructorReturn(
             this,
-            getPrototypeOf(WithSortableHandle).apply(this, arguments),
+            _getPrototypeOf(WithSortableHandle).call(this, props),
           );
+          _this.wrappedInstanceRef = React.createRef();
+          return _this;
         }
 
-        createClass(WithSortableHandle, [
+        _createClass(WithSortableHandle, [
           {
             key: 'componentDidMount',
             value: function componentDidMount() {
-              var node = reactDom.findDOMNode(this);
-              node.sortableHandle = true;
+              var node = this.wrappedInstanceRef.current;
+
+              if (node) {
+                node.sortableHandle = true;
+              }
             },
           },
           {
@@ -1888,16 +2106,16 @@
                 config.withRef,
                 'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableHandle() call',
               );
-              return this.refs.wrappedInstance;
+              return this.wrappedInstanceRef.current;
             },
           },
           {
             key: 'render',
             value: function render() {
-              var ref = config.withRef ? 'wrappedInstance' : null;
+              var ref = config.withRef ? this.wrappedInstanceRef : null;
               return React.createElement(
                 WrappedComponent,
-                _extends_1(
+                _extends(
                   {
                     ref: ref,
                   },
@@ -1910,7 +2128,7 @@
 
         return WithSortableHandle;
       })(React.Component)),
-      defineProperty(
+      _defineProperty(
         _class,
         'displayName',
         provideDisplayName('sortableHandle', WrappedComponent),
