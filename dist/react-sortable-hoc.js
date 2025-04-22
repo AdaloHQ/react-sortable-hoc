@@ -35,7 +35,6 @@ var _defineProperty = _interopDefault(
 var React = require('react');
 var React__default = _interopDefault(React);
 var PropTypes = _interopDefault(require('prop-types'));
-require('react-dom');
 var invariant = _interopDefault(require('invariant'));
 
 var Manager = (function() {

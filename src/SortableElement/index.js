@@ -2,15 +2,18 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import invariant from 'invariant';
 
-import { provideDisplayName, omit } from '../utils';
+import {provideDisplayName, omit} from '../utils';
 import SortableElementContext from '../contexts/SortableElementContext';
 
 export default function sortableElement(
   WrappedComponent,
-  config = { withRef: false },
+  config = {withRef: false},
 ) {
   return class WithSortableElement extends React.Component {
-    static displayName = provideDisplayName('sortableElement', WrappedComponent);
+    static displayName = provideDisplayName(
+      'sortableElement',
+      WrappedComponent,
+    );
 
     static contextType = SortableElementContext;
 
@@ -30,7 +33,7 @@ export default function sortableElement(
     }
 
     componentDidMount() {
-      const { collection, disabled, index } = this.props;
+      const {collection, disabled, index} = this.props;
 
       if (!disabled) {
         this.setDraggable(collection, index);
@@ -43,7 +46,7 @@ export default function sortableElement(
       }
 
       if (this.props.disabled !== prevProps.disabled) {
-        const { collection, disabled, index } = this.props;
+        const {collection, disabled, index} = this.props;
         if (disabled) {
           this.removeDraggable(collection);
         } else {
@@ -56,7 +59,7 @@ export default function sortableElement(
     }
 
     componentWillUnmount() {
-      const { collection, disabled } = this.props;
+      const {collection, disabled} = this.props;
 
       if (!disabled) {
         this.removeDraggable(collection);
@@ -73,7 +76,7 @@ export default function sortableElement(
       };
 
       this.node = node;
-      this.ref = { node };
+      this.ref = {node};
       this.context.manager.add(collection, this.ref);
     }
 

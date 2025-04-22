@@ -10,7 +10,6 @@ import _assertThisInitialized from '@babel/runtime/helpers/esm/assertThisInitial
 import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
 import React__default, {createRef, createElement, Component} from 'react';
 import PropTypes from 'prop-types';
-import 'react-dom';
 import invariant from 'invariant';
 
 var Manager = (function() {

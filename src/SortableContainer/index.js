@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {findDOMNode} from 'react-dom';
 import invariant from 'invariant';
 
 import Manager from '../Manager';
@@ -881,7 +880,7 @@ export default function sortableContainer(
     }
 
     getContainer() {
-      const { getContainer } = this.props;
+      const {getContainer} = this.props;
 
       if (typeof getContainer !== 'function') {
         return this.wrappedInstanceRef.current;
@@ -896,10 +895,10 @@ export default function sortableContainer(
       const ref = config.withRef ? this.wrappedInstanceRef : null;
 
       return (
-        <SortableElementContext.Provider value={ this.getContext() }>
+        <SortableElementContext.Provider value={this.getContext()}>
           <WrappedComponent
-            ref={ ref }
-            { ...omit(
+            ref={ref}
+            {...omit(
               this.props,
               'contentWindow',
               'useWindowAsScrollContainer',
@@ -923,7 +922,7 @@ export default function sortableContainer(
               'getHelperDimensions',
               'helperContainer',
               'disableAutoscroll',
-            ) }
+            )}
           />
         </SortableElementContext.Provider>
       );
