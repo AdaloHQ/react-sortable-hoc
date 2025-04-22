@@ -1,13 +1,8 @@
 (function(global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined'
-    ? factory(
-        exports,
-        require('react'),
-        require('prop-types'),
-        require('react-dom'),
-      )
+    ? factory(exports, require('react'), require('prop-types'))
     : typeof define === 'function' && define.amd
-    ? define(['exports', 'react', 'prop-types', 'react-dom'], factory)
+    ? define(['exports', 'react', 'prop-types'], factory)
     : ((global = global || self),
       factory((global.SortableHOC = {}), global.React, global.PropTypes));
 })(this, function(exports, React, PropTypes) {
