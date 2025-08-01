@@ -7,6 +7,7 @@ function _interopDefault(ex) {
 }
 
 var _extends = _interopDefault(require('@babel/runtime/helpers/extends'));
+require('@babel/runtime/helpers/readOnlyError');
 var _slicedToArray = _interopDefault(
   require('@babel/runtime/helpers/slicedToArray'),
 );
@@ -26,9 +27,6 @@ var _getPrototypeOf = _interopDefault(
   require('@babel/runtime/helpers/getPrototypeOf'),
 );
 var _inherits = _interopDefault(require('@babel/runtime/helpers/inherits'));
-var _assertThisInitialized = _interopDefault(
-  require('@babel/runtime/helpers/assertThisInitialized'),
-);
 var _defineProperty = _interopDefault(
   require('@babel/runtime/helpers/defineProperty'),
 );
@@ -40,18 +38,15 @@ var invariant = _interopDefault(require('invariant'));
 var Manager = (function() {
   function Manager() {
     _classCallCheck(this, Manager);
-
     _defineProperty(this, 'refs', {});
   }
-
-  _createClass(Manager, [
+  return _createClass(Manager, [
     {
       key: 'add',
       value: function add(collection, ref) {
         if (!this.refs[collection]) {
           this.refs[collection] = [];
         }
-
         this.refs[collection].push(ref);
       },
     },
@@ -59,7 +54,6 @@ var Manager = (function() {
       key: 'remove',
       value: function remove(collection, ref) {
         var index = this.getIndex(collection, ref);
-
         if (index !== -1) {
           this.refs[collection].splice(index, 1);
         }
@@ -75,7 +69,6 @@ var Manager = (function() {
       key: 'getActive',
       value: function getActive() {
         var _this = this;
-
         return this.refs[this.active.collection].find(function(_ref) {
           var node = _ref.node;
           return node.sortableInfo.index == _this.active.index;
@@ -99,10 +92,7 @@ var Manager = (function() {
       },
     },
   ]);
-
-  return Manager;
 })();
-
 function sortByIndex(_ref2, _ref3) {
   var index1 = _ref2.node.sortableInfo.index;
   var index2 = _ref3.node.sortableInfo.index;
@@ -124,12 +114,10 @@ function omit(obj) {
   ) {
     keysToOmit[_key - 1] = arguments[_key];
   }
-
   return Object.keys(obj).reduce(function(acc, key) {
     if (keysToOmit.indexOf(key) === -1) {
       acc[key] = obj[key];
     }
-
     return acc;
   }, {});
 }
@@ -142,7 +130,6 @@ var vendorPrefix = (function() {
   if (typeof window === 'undefined' || typeof document === 'undefined') {
     return '';
   }
-
   var styles = window.getComputedStyle(document.documentElement, '') || [
     '-moz-hidden-iframe',
   ];
@@ -151,11 +138,9 @@ var vendorPrefix = (function() {
     .join('')
     .match(/-(moz|webkit|ms)-/) ||
     (styles.OLink === '' && ['', 'o']))[1];
-
   switch (pre) {
     case 'ms':
       return 'ms';
-
     default:
       return pre && pre.length ? pre[0].toUpperCase() + pre.substr(1) : '';
   }
@@ -165,24 +150,19 @@ function closest(el, fn) {
     if (fn(el)) {
       return el;
     }
-
     el = el.parentNode;
   }
-
   return null;
 }
 function limit(min, max, value) {
   return Math.max(min, Math.min(value, max));
 }
-
 function getPixelValue(stringValue) {
   if (stringValue.substr(-2) === 'px') {
     return parseFloat(stringValue);
   }
-
   return 0;
 }
-
 function getElementMargin(element) {
   var style = window.getComputedStyle(element);
   return {
@@ -230,20 +210,16 @@ function getEdgeOffset(node, parent) {
           top: 0,
           left: 0,
         };
-
   if (!node) {
     return undefined;
   }
-
   var nodeOffset = {
     top: offset.top + node.offsetTop,
     left: offset.left + node.offsetLeft,
   };
-
   if (node.parentNode === parent) {
     return nodeOffset;
   }
-
   return getEdgeOffset(node.parentNode, parent, nodeOffset);
 }
 function getLockPixelOffset(_ref) {
@@ -253,7 +229,6 @@ function getLockPixelOffset(_ref) {
   var offsetX = lockOffset;
   var offsetY = lockOffset;
   var unit = 'px';
-
   if (typeof lockOffset === 'string') {
     var match = /^[+-]?\d*(?:\.\d*)?(px|%)$/.exec(lockOffset);
     invariant(
@@ -266,18 +241,15 @@ function getLockPixelOffset(_ref) {
     offsetY = parseFloat(lockOffset);
     unit = match[1];
   }
-
   invariant(
     isFinite(offsetX) && isFinite(offsetY),
     'lockOffset value should be a finite. Given %s',
     lockOffset,
   );
-
   if (unit === '%') {
     offsetX = (offsetX * width) / 100;
     offsetY = (offsetY * height) / 100;
   }
-
   return {
     x: offsetX,
     y: offsetY,
@@ -292,16 +264,34 @@ function _finallyRethrows(body, finalizer) {
   } catch (e) {
     return finalizer(true, e);
   }
-
   if (result && result.then) {
     return result.then(finalizer.bind(null, false), finalizer.bind(null, true));
   }
-
   return finalizer(false, value);
 }
+function _callSuper(t, o, e) {
+  return (
+    (o = _getPrototypeOf(o)),
+    _possibleConstructorReturn(
+      t,
+      _isNativeReflectConstruct()
+        ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor)
+        : o.apply(t, e),
+    )
+  );
+}
+function _isNativeReflectConstruct() {
+  try {
+    var t = !Boolean.prototype.valueOf.call(
+      Reflect.construct(Boolean, [], function() {}),
+    );
+  } catch (t) {}
+  return (_isNativeReflectConstruct = function _isNativeReflectConstruct() {
+    return !!t;
+  })();
+}
 function sortableContainer(WrappedComponent) {
-  var _class, _temp;
-
+  var _WithSortableContainer;
   var config =
     arguments.length > 1 && arguments[1] !== undefined
       ? arguments[1]
@@ -309,579 +299,461 @@ function sortableContainer(WrappedComponent) {
           withRef: false,
         };
   return (
-    (_temp = _class = (function(_React$Component) {
-      _inherits(WithSortableContainer, _React$Component);
-
+    (_WithSortableContainer = (function(_React$Component) {
       function WithSortableContainer(props) {
         var _this;
-
         _classCallCheck(this, WithSortableContainer);
-
-        _this = _possibleConstructorReturn(
-          this,
-          _getPrototypeOf(WithSortableContainer).call(this, props),
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'getEventTarget',
-          function(container, key) {
-            if (key === 'start') {
-              return container;
-            }
-
-            return window;
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'handleStart',
-          function(event) {
-            var _this$props = _this.props,
-              distance = _this$props.distance,
-              shouldCancelStart = _this$props.shouldCancelStart;
-
-            if (event.button === 2 || shouldCancelStart(event)) {
+        _this = _callSuper(this, WithSortableContainer, [props]);
+        _defineProperty(_this, 'getEventTarget', function(container, key) {
+          if (key === 'start') {
+            return container;
+          }
+          return window;
+        });
+        _defineProperty(_this, 'handleStart', function(event) {
+          var _this$props = _this.props,
+            distance = _this$props.distance,
+            shouldCancelStart = _this$props.shouldCancelStart;
+          console.log(distance);
+          if (event.button === 2 || shouldCancelStart(event)) {
+            return;
+          }
+          _this._touched = true;
+          _this._pos = getPosition(event);
+          var node = closest(event.target, function(el) {
+            return el.sortableInfo != null;
+          });
+          if (
+            node &&
+            node.sortableInfo &&
+            _this.nodeIsChild(node) &&
+            !_this.state.sorting
+          ) {
+            var useDragHandle = _this.props.useDragHandle;
+            var _node$sortableInfo = node.sortableInfo,
+              index = _node$sortableInfo.index,
+              collection = _node$sortableInfo.collection;
+            if (
+              useDragHandle &&
+              !closest(event.target, function(el) {
+                return el.sortableHandle != null;
+              })
+            ) {
               return;
             }
-
-            _this._touched = true;
-            _this._pos = getPosition(event);
-            var node = closest(event.target, function(el) {
-              return el.sortableInfo != null;
-            });
-
+            _this.manager.active = {
+              index: index,
+              collection: collection,
+            };
             if (
-              node &&
-              node.sortableInfo &&
-              _this.nodeIsChild(node) &&
-              !_this.state.sorting
+              !isTouchEvent(event) &&
+              event.target.tagName.toLowerCase() === 'a'
             ) {
-              var useDragHandle = _this.props.useDragHandle;
-              var _node$sortableInfo = node.sortableInfo,
-                index = _node$sortableInfo.index,
-                collection = _node$sortableInfo.collection;
-
-              if (
-                useDragHandle &&
-                !closest(event.target, function(el) {
-                  return el.sortableHandle != null;
-                })
-              ) {
-                return;
-              }
-
-              _this.manager.active = {
-                index: index,
-                collection: collection,
-              };
-
-              if (
-                !isTouchEvent(event) &&
-                event.target.tagName.toLowerCase() === 'a'
-              ) {
-                event.preventDefault();
-              }
-
-              if (!distance) {
-                if (_this.props.pressDelay === 0) {
-                  _this.handlePress(event);
-                } else {
-                  _this.pressTimer = setTimeout(function() {
-                    return _this.handlePress(event);
-                  }, _this.props.pressDelay);
-                }
-              }
+              event.preventDefault();
             }
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'nodeIsChild',
-          function(node) {
-            return node.sortableInfo.manager === _this.manager;
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'handleMove',
-          function(event) {
-            var _this$props2 = _this.props,
-              distance = _this$props2.distance,
-              pressThreshold = _this$props2.pressThreshold;
-
-            if (
-              !_this.state.sorting &&
-              _this._touched &&
-              !_this._awaitingUpdateBeforeSortStart
-            ) {
-              var position = getPosition(event);
-              var delta = {
-                x: _this._pos.x - position.x,
-                y: _this._pos.y - position.y,
-              };
-              var combinedDelta = Math.abs(delta.x) + Math.abs(delta.y);
-              _this.delta = delta;
-
-              if (
-                !distance &&
-                (!pressThreshold ||
-                  (pressThreshold && combinedDelta >= pressThreshold))
-              ) {
-                clearTimeout(_this.cancelTimer);
-                _this.cancelTimer = setTimeout(_this.cancel, 0);
-              } else if (
-                distance &&
-                combinedDelta >= distance &&
-                _this.manager.isActive()
-              ) {
+            if (!distance) {
+              if (_this.props.pressDelay === 0) {
                 _this.handlePress(event);
+              } else {
+                _this.pressTimer = setTimeout(function() {
+                  return _this.handlePress(event);
+                }, _this.props.pressDelay);
               }
             }
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'handleEnd',
-          function() {
-            _this._touched = false;
-
-            _this.cancel();
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'cancel',
-          function() {
-            var distance = _this.props.distance;
-            var sorting = _this.state.sorting;
-
-            if (!sorting) {
-              if (!distance) {
-                clearTimeout(_this.pressTimer);
-              }
-
-              _this.manager.active = null;
+          }
+        });
+        _defineProperty(_this, 'nodeIsChild', function(node) {
+          return node.sortableInfo.manager === _this.manager;
+        });
+        _defineProperty(_this, 'handleMove', function(event) {
+          var _this$props2 = _this.props,
+            distance = _this$props2.distance,
+            pressThreshold = _this$props2.pressThreshold;
+          if (
+            !_this.state.sorting &&
+            _this._touched &&
+            !_this._awaitingUpdateBeforeSortStart
+          ) {
+            var position = getPosition(event);
+            var delta = {
+              x: _this._pos.x - position.x,
+              y: _this._pos.y - position.y,
+            };
+            var combinedDelta = Math.abs(delta.x) + Math.abs(delta.y);
+            _this.delta = delta;
+            if (
+              !distance &&
+              (!pressThreshold ||
+                (pressThreshold && combinedDelta >= pressThreshold))
+            ) {
+              clearTimeout(_this.cancelTimer);
+              _this.cancelTimer = setTimeout(_this.cancel, 0);
+            } else if (
+              distance &&
+              combinedDelta >= distance &&
+              _this.manager.isActive()
+            ) {
+              _this.handlePress(event);
             }
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'handlePress',
-          function(event) {
-            try {
-              var active = _this.manager.getActive();
-
-              var _temp6 = (function() {
-                if (active) {
-                  var _temp7 = function _temp7() {
-                    var margin = getElementMargin(_node);
-
-                    var containerBoundingRect = _this.container.getBoundingClientRect();
-
-                    var dimensions = _getHelperDimensions({
-                      index: _index,
-                      node: _node,
-                      collection: _collection,
-                    });
-
-                    _this.node = _node;
-                    _this.margin = margin;
-                    _this.width = dimensions.width;
-                    _this.height = dimensions.height;
-                    _this.marginOffset = {
-                      x: _this.margin.left + _this.margin.right,
-                      y: Math.max(_this.margin.top, _this.margin.bottom),
-                    };
-                    _this.boundingClientRect = _node.getBoundingClientRect();
-                    _this.containerBoundingRect = containerBoundingRect;
-                    _this.index = _index;
-                    _this.newIndex = _index;
-                    _this.axis = {
-                      x: _axis.indexOf('x') >= 0,
-                      y: _axis.indexOf('y') >= 0,
-                    };
-                    _this.offsetEdge = getEdgeOffset(_node, _this.container);
-                    _this.initialOffset = getPosition(event);
-                    _this.initialScroll = {
-                      top: _this.container.scrollTop,
-                      left: _this.container.scrollLeft,
-                    };
-                    _this.initialWindowScroll = {
-                      top: window.pageYOffset,
-                      left: window.pageXOffset,
-                    };
-
-                    var fields = _node.querySelectorAll(
-                      'input, textarea, select',
-                    );
-
-                    var clonedNode = _node.cloneNode(true);
-
-                    var clonedFields = _toConsumableArray(
-                      clonedNode.querySelectorAll('input, textarea, select'),
-                    );
-
-                    clonedFields.forEach(function(field, i) {
-                      if (field.type !== 'file' && fields[_index]) {
-                        field.value = fields[i].value;
-                      }
-                    });
-                    _this.helper = _this.helperContainer.appendChild(
-                      clonedNode,
-                    );
-                    _this.helper.style.position = 'fixed';
-                    _this.helper.style.top = ''.concat(
-                      _this.boundingClientRect.top - margin.top,
-                      'px',
-                    );
-                    _this.helper.style.left = ''.concat(
-                      _this.boundingClientRect.left - margin.left,
-                      'px',
-                    );
-                    _this.helper.style.width = ''.concat(_this.width, 'px');
-                    _this.helper.style.height = ''.concat(_this.height, 'px');
-                    _this.helper.style.boxSizing = 'border-box';
-                    _this.helper.style.pointerEvents = 'none';
-
-                    if (_hideSortableGhost) {
-                      _this.sortableGhost = _node;
-                      _node.style.visibility = 'hidden';
-                      _node.style.opacity = 0;
-                    }
-
-                    _this.minTranslate = {};
-                    _this.maxTranslate = {};
-
-                    if (_this.axis.x) {
-                      _this.minTranslate.x =
-                        (_useWindowAsScrollContainer
-                          ? 0
-                          : containerBoundingRect.left) -
-                        _this.boundingClientRect.left -
-                        _this.width / 2;
-                      _this.maxTranslate.x =
-                        (_useWindowAsScrollContainer
-                          ? _this.contentWindow.innerWidth
-                          : containerBoundingRect.left +
-                            containerBoundingRect.width) -
-                        _this.boundingClientRect.left -
-                        _this.width / 2;
-                    }
-
-                    if (_this.axis.y) {
-                      _this.minTranslate.y =
-                        (_useWindowAsScrollContainer
-                          ? 0
-                          : containerBoundingRect.top) -
-                        _this.boundingClientRect.top -
-                        _this.height / 2;
-                      _this.maxTranslate.y =
-                        (_useWindowAsScrollContainer
-                          ? _this.contentWindow.innerHeight
-                          : containerBoundingRect.top +
-                            containerBoundingRect.height) -
-                        _this.boundingClientRect.top -
-                        _this.height / 2;
-                    }
-
-                    if (_helperClass) {
-                      var _this$helper$classLis;
-
-                      (_this$helper$classLis =
-                        _this.helper.classList).add.apply(
-                        _this$helper$classLis,
-                        _toConsumableArray(_helperClass.split(' ')),
-                      );
-                    }
-
-                    _this.listenerNode = event.touches
-                      ? _node
-                      : _this.contentWindow;
-                    events.move.forEach(function(eventName) {
-                      return _this.listenerNode.addEventListener(
-                        eventName,
-                        _this.handleSortMove,
-                        false,
-                      );
-                    });
-                    events.end.forEach(function(eventName) {
-                      return _this.listenerNode.addEventListener(
-                        eventName,
-                        _this.handleSortEnd,
-                        false,
-                      );
-                    });
-
-                    _this.setState({
-                      sorting: true,
-                      sortingIndex: _index,
-                    });
-
-                    if (_onSortStart) {
-                      _onSortStart(
-                        {
-                          node: _node,
-                          index: _index,
-                          collection: _collection,
-                        },
-                        event,
-                      );
-                    }
+          }
+        });
+        _defineProperty(_this, 'handleEnd', function() {
+          _this._touched = false;
+          _this.cancel();
+        });
+        _defineProperty(_this, 'cancel', function() {
+          var distance = _this.props.distance;
+          var sorting = _this.state.sorting;
+          if (!sorting) {
+            if (!distance) {
+              clearTimeout(_this.pressTimer);
+            }
+            _this.manager.active = null;
+          }
+        });
+        _defineProperty(_this, 'handlePress', function(event) {
+          try {
+            var active = _this.manager.getActive();
+            var _temp4 = (function() {
+              if (active) {
+                var _temp3 = function _temp3() {
+                  var margin = getElementMargin(node);
+                  var containerBoundingRect = _this.container.getBoundingClientRect();
+                  var dimensions = getHelperDimensions({
+                    index: index,
+                    node: node,
+                    collection: collection,
+                  });
+                  _this.node = node;
+                  _this.margin = margin;
+                  _this.width = dimensions.width;
+                  _this.height = dimensions.height;
+                  _this.marginOffset = {
+                    x: _this.margin.left + _this.margin.right,
+                    y: Math.max(_this.margin.top, _this.margin.bottom),
                   };
-
-                  var _this$props3 = _this.props,
-                    _axis = _this$props3.axis,
-                    _getHelperDimensions = _this$props3.getHelperDimensions,
-                    _helperClass = _this$props3.helperClass,
-                    _hideSortableGhost = _this$props3.hideSortableGhost,
-                    updateBeforeSortStart = _this$props3.updateBeforeSortStart,
-                    _onSortStart = _this$props3.onSortStart,
-                    _useWindowAsScrollContainer =
-                      _this$props3.useWindowAsScrollContainer;
-                  var _node = active.node,
-                    _collection = active.collection;
-                  var _index = _node.sortableInfo.index;
-
-                  var _temp8 = (function() {
-                    if (typeof updateBeforeSortStart === 'function') {
-                      _this._awaitingUpdateBeforeSortStart = true;
-
-                      var _temp9 = _finallyRethrows(
-                        function() {
-                          return Promise.resolve(
-                            updateBeforeSortStart(
-                              {
-                                node: _node,
-                                index: _index,
-                                collection: _collection,
-                              },
-                              event,
-                            ),
-                          ).then(function() {});
-                        },
-                        function(_wasThrown, _result) {
-                          _this._awaitingUpdateBeforeSortStart = false;
-                          if (_wasThrown) throw _result;
-                          return _result;
-                        },
-                      );
-
-                      if (_temp9 && _temp9.then)
-                        return _temp9.then(function() {});
+                  _this.boundingClientRect = node.getBoundingClientRect();
+                  _this.containerBoundingRect = containerBoundingRect;
+                  _this.index = index;
+                  _this.newIndex = index;
+                  _this.axis = {
+                    x: axis.indexOf('x') >= 0,
+                    y: axis.indexOf('y') >= 0,
+                  };
+                  _this.offsetEdge = getEdgeOffset(node, _this.container);
+                  _this.initialOffset = getPosition(event);
+                  _this.initialScroll = {
+                    top: _this.container.scrollTop,
+                    left: _this.container.scrollLeft,
+                  };
+                  _this.initialWindowScroll = {
+                    top: window.pageYOffset,
+                    left: window.pageXOffset,
+                  };
+                  var fields = node.querySelectorAll('input, textarea, select');
+                  var clonedNode = node.cloneNode(true);
+                  var clonedFields = _toConsumableArray(
+                    clonedNode.querySelectorAll('input, textarea, select'),
+                  );
+                  clonedFields.forEach(function(field, i) {
+                    if (field.type !== 'file' && fields[index]) {
+                      field.value = fields[i].value;
                     }
-                  })();
-
-                  return _temp8 && _temp8.then
-                    ? _temp8.then(_temp7)
-                    : _temp7(_temp8);
-                }
-              })();
-
-              return Promise.resolve(
-                _temp6 && _temp6.then ? _temp6.then(function() {}) : void 0,
+                  });
+                  _this.helper = _this.helperContainer.appendChild(clonedNode);
+                  _this.helper.style.position = 'fixed';
+                  _this.helper.style.top = ''.concat(
+                    _this.boundingClientRect.top - margin.top,
+                    'px',
+                  );
+                  _this.helper.style.left = ''.concat(
+                    _this.boundingClientRect.left - margin.left,
+                    'px',
+                  );
+                  _this.helper.style.width = ''.concat(_this.width, 'px');
+                  _this.helper.style.height = ''.concat(_this.height, 'px');
+                  _this.helper.style.boxSizing = 'border-box';
+                  _this.helper.style.pointerEvents = 'none';
+                  if (hideSortableGhost) {
+                    _this.sortableGhost = node;
+                    node.style.visibility = 'hidden';
+                    node.style.opacity = 0;
+                  }
+                  _this.minTranslate = {};
+                  _this.maxTranslate = {};
+                  if (_this.axis.x) {
+                    _this.minTranslate.x =
+                      (useWindowAsScrollContainer
+                        ? 0
+                        : containerBoundingRect.left) -
+                      _this.boundingClientRect.left -
+                      _this.width / 2;
+                    _this.maxTranslate.x =
+                      (useWindowAsScrollContainer
+                        ? _this.contentWindow.innerWidth
+                        : containerBoundingRect.left +
+                          containerBoundingRect.width) -
+                      _this.boundingClientRect.left -
+                      _this.width / 2;
+                  }
+                  if (_this.axis.y) {
+                    _this.minTranslate.y =
+                      (useWindowAsScrollContainer
+                        ? 0
+                        : containerBoundingRect.top) -
+                      _this.boundingClientRect.top -
+                      _this.height / 2;
+                    _this.maxTranslate.y =
+                      (useWindowAsScrollContainer
+                        ? _this.contentWindow.innerHeight
+                        : containerBoundingRect.top +
+                          containerBoundingRect.height) -
+                      _this.boundingClientRect.top -
+                      _this.height / 2;
+                  }
+                  if (helperClass) {
+                    var _this$helper$classLis;
+                    (_this$helper$classLis = _this.helper.classList).add.apply(
+                      _this$helper$classLis,
+                      _toConsumableArray(helperClass.split(' ')),
+                    );
+                  }
+                  _this.listenerNode = event.touches
+                    ? node
+                    : _this.contentWindow;
+                  events.move.forEach(function(eventName) {
+                    return _this.listenerNode.addEventListener(
+                      eventName,
+                      _this.handleSortMove,
+                      false,
+                    );
+                  });
+                  events.end.forEach(function(eventName) {
+                    return _this.listenerNode.addEventListener(
+                      eventName,
+                      _this.handleSortEnd,
+                      false,
+                    );
+                  });
+                  _this.setState({
+                    sorting: true,
+                    sortingIndex: index,
+                  });
+                  if (onSortStart) {
+                    onSortStart(
+                      {
+                        node: node,
+                        index: index,
+                        collection: collection,
+                      },
+                      event,
+                    );
+                  }
+                };
+                var _this$props3 = _this.props,
+                  axis = _this$props3.axis,
+                  getHelperDimensions = _this$props3.getHelperDimensions,
+                  helperClass = _this$props3.helperClass,
+                  hideSortableGhost = _this$props3.hideSortableGhost,
+                  updateBeforeSortStart = _this$props3.updateBeforeSortStart,
+                  onSortStart = _this$props3.onSortStart,
+                  useWindowAsScrollContainer =
+                    _this$props3.useWindowAsScrollContainer;
+                var node = active.node,
+                  collection = active.collection;
+                var index = node.sortableInfo.index;
+                var _temp2 = (function() {
+                  if (typeof updateBeforeSortStart === 'function') {
+                    _this._awaitingUpdateBeforeSortStart = true;
+                    var _temp = _finallyRethrows(
+                      function() {
+                        return Promise.resolve(
+                          updateBeforeSortStart(
+                            {
+                              node: node,
+                              index: index,
+                              collection: collection,
+                            },
+                            event,
+                          ),
+                        ).then(function() {});
+                      },
+                      function(_wasThrown, _result) {
+                        _this._awaitingUpdateBeforeSortStart = false;
+                        if (_wasThrown) throw _result;
+                        return _result;
+                      },
+                    );
+                    if (_temp && _temp.then) return _temp.then(function() {});
+                  }
+                })();
+                return _temp2 && _temp2.then
+                  ? _temp2.then(_temp3)
+                  : _temp3(_temp2);
+              }
+            })();
+            return Promise.resolve(
+              _temp4 && _temp4.then ? _temp4.then(function() {}) : void 0,
+            );
+          } catch (e) {
+            return Promise.reject(e);
+          }
+        });
+        _defineProperty(_this, 'handleSortMove', function(event) {
+          var onSortMove = _this.props.onSortMove;
+          event.preventDefault();
+          _this.updatePosition(event);
+          _this.animateNodes();
+          _this.autoscroll();
+          if (onSortMove) {
+            onSortMove(event);
+          }
+        });
+        _defineProperty(_this, 'handleSortEnd', function(event) {
+          var _this$props4 = _this.props,
+            hideSortableGhost = _this$props4.hideSortableGhost,
+            onSortEnd = _this$props4.onSortEnd;
+          var collection = _this.manager.active.collection;
+          if (_this.listenerNode) {
+            events.move.forEach(function(eventName) {
+              return _this.listenerNode.removeEventListener(
+                eventName,
+                _this.handleSortMove,
               );
-            } catch (e) {
-              return Promise.reject(e);
-            }
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'handleSortMove',
-          function(event) {
-            var onSortMove = _this.props.onSortMove;
-            event.preventDefault();
-
-            _this.updatePosition(event);
-
-            _this.animateNodes();
-
-            _this.autoscroll();
-
-            if (onSortMove) {
-              onSortMove(event);
-            }
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'handleSortEnd',
-          function(event) {
-            var _this$props4 = _this.props,
-              hideSortableGhost = _this$props4.hideSortableGhost,
-              onSortEnd = _this$props4.onSortEnd;
-            var collection = _this.manager.active.collection;
-
-            if (_this.listenerNode) {
-              events.move.forEach(function(eventName) {
-                return _this.listenerNode.removeEventListener(
-                  eventName,
-                  _this.handleSortMove,
-                );
-              });
-              events.end.forEach(function(eventName) {
-                return _this.listenerNode.removeEventListener(
-                  eventName,
-                  _this.handleSortEnd,
-                );
-              });
-            }
-
-            _this.helper.parentNode.removeChild(_this.helper);
-
-            if (hideSortableGhost && _this.sortableGhost) {
-              _this.sortableGhost.style.visibility = '';
-              _this.sortableGhost.style.opacity = '';
-            }
-
-            var nodes = _this.manager.refs[collection];
-
-            for (var i = 0, len = nodes.length; i < len; i++) {
-              var _node2 = nodes[i];
-              var el = _node2.node;
-              _node2.edgeOffset = null;
-              el.style[''.concat(vendorPrefix, 'Transform')] = '';
-              el.style[''.concat(vendorPrefix, 'TransitionDuration')] = '';
-            }
-
+            });
+            events.end.forEach(function(eventName) {
+              return _this.listenerNode.removeEventListener(
+                eventName,
+                _this.handleSortEnd,
+              );
+            });
+          }
+          _this.helper.parentNode.removeChild(_this.helper);
+          if (hideSortableGhost && _this.sortableGhost) {
+            _this.sortableGhost.style.visibility = '';
+            _this.sortableGhost.style.opacity = '';
+          }
+          var nodes = _this.manager.refs[collection];
+          for (var i = 0, len = nodes.length; i < len; i++) {
+            var node = nodes[i];
+            var el = node.node;
+            node.edgeOffset = null;
+            el.style[''.concat(vendorPrefix, 'Transform')] = '';
+            el.style[''.concat(vendorPrefix, 'TransitionDuration')] = '';
+          }
+          clearInterval(_this.autoscrollInterval);
+          _this.autoscrollInterval = null;
+          _this.manager.active = null;
+          _this.setState({
+            sorting: false,
+            sortingIndex: null,
+          });
+          if (typeof onSortEnd === 'function') {
+            onSortEnd(
+              {
+                oldIndex: _this.index,
+                newIndex: _this.newIndex,
+                collection: collection,
+              },
+              event,
+            );
+          }
+          _this._touched = false;
+        });
+        _defineProperty(_this, 'autoscroll', function() {
+          var disableAutoscroll = _this.props.disableAutoscroll;
+          if (disableAutoscroll) {
+            return;
+          }
+          var translate = _this.translate;
+          var direction = {
+            x: 0,
+            y: 0,
+          };
+          var speed = {
+            x: 1,
+            y: 1,
+          };
+          var acceleration = {
+            x: 10,
+            y: 10,
+          };
+          var _this$scrollContainer = _this.scrollContainer,
+            scrollTop = _this$scrollContainer.scrollTop,
+            scrollLeft = _this$scrollContainer.scrollLeft,
+            scrollHeight = _this$scrollContainer.scrollHeight,
+            scrollWidth = _this$scrollContainer.scrollWidth,
+            clientHeight = _this$scrollContainer.clientHeight,
+            clientWidth = _this$scrollContainer.clientWidth;
+          var isTop = scrollTop === 0;
+          var isBottom = scrollHeight - scrollTop - clientHeight === 0;
+          var isLeft = scrollLeft === 0;
+          var isRight = scrollWidth - scrollLeft - clientWidth === 0;
+          if (
+            translate.y >= _this.maxTranslate.y - _this.height / 2 &&
+            !isBottom
+          ) {
+            direction.y = 1;
+            speed.y =
+              acceleration.y *
+              Math.abs(
+                (_this.maxTranslate.y - _this.height / 2 - translate.y) /
+                  _this.height,
+              );
+          } else if (
+            translate.x >= _this.maxTranslate.x - _this.width / 2 &&
+            !isRight
+          ) {
+            direction.x = 1;
+            speed.x =
+              acceleration.x *
+              Math.abs(
+                (_this.maxTranslate.x - _this.width / 2 - translate.x) /
+                  _this.width,
+              );
+          } else if (
+            translate.y <= _this.minTranslate.y + _this.height / 2 &&
+            !isTop
+          ) {
+            direction.y = -1;
+            speed.y =
+              acceleration.y *
+              Math.abs(
+                (translate.y - _this.height / 2 - _this.minTranslate.y) /
+                  _this.height,
+              );
+          } else if (
+            translate.x <= _this.minTranslate.x + _this.width / 2 &&
+            !isLeft
+          ) {
+            direction.x = -1;
+            speed.x =
+              acceleration.x *
+              Math.abs(
+                (translate.x - _this.width / 2 - _this.minTranslate.x) /
+                  _this.width,
+              );
+          }
+          if (_this.autoscrollInterval) {
             clearInterval(_this.autoscrollInterval);
             _this.autoscrollInterval = null;
-            _this.manager.active = null;
-
-            _this.setState({
-              sorting: false,
-              sortingIndex: null,
-            });
-
-            if (typeof onSortEnd === 'function') {
-              onSortEnd(
-                {
-                  oldIndex: _this.index,
-                  newIndex: _this.newIndex,
-                  collection: collection,
-                },
-                event,
-              );
-            }
-
-            _this._touched = false;
-          },
-        );
-
-        _defineProperty(
-          _assertThisInitialized(_assertThisInitialized(_this)),
-          'autoscroll',
-          function() {
-            var disableAutoscroll = _this.props.disableAutoscroll;
-
-            if (disableAutoscroll) {
-              return;
-            }
-
-            var translate = _this.translate;
-            var direction = {
-              x: 0,
-              y: 0,
-            };
-            var speed = {
-              x: 1,
-              y: 1,
-            };
-            var acceleration = {
-              x: 10,
-              y: 10,
-            };
-            var _this$scrollContainer = _this.scrollContainer,
-              scrollTop = _this$scrollContainer.scrollTop,
-              scrollLeft = _this$scrollContainer.scrollLeft,
-              scrollHeight = _this$scrollContainer.scrollHeight,
-              scrollWidth = _this$scrollContainer.scrollWidth,
-              clientHeight = _this$scrollContainer.clientHeight,
-              clientWidth = _this$scrollContainer.clientWidth;
-            var isTop = scrollTop === 0;
-            var isBottom = scrollHeight - scrollTop - clientHeight === 0;
-            var isLeft = scrollLeft === 0;
-            var isRight = scrollWidth - scrollLeft - clientWidth === 0;
-
-            if (
-              translate.y >= _this.maxTranslate.y - _this.height / 2 &&
-              !isBottom
-            ) {
-              direction.y = 1;
-              speed.y =
-                acceleration.y *
-                Math.abs(
-                  (_this.maxTranslate.y - _this.height / 2 - translate.y) /
-                    _this.height,
-                );
-            } else if (
-              translate.x >= _this.maxTranslate.x - _this.width / 2 &&
-              !isRight
-            ) {
-              direction.x = 1;
-              speed.x =
-                acceleration.x *
-                Math.abs(
-                  (_this.maxTranslate.x - _this.width / 2 - translate.x) /
-                    _this.width,
-                );
-            } else if (
-              translate.y <= _this.minTranslate.y + _this.height / 2 &&
-              !isTop
-            ) {
-              direction.y = -1;
-              speed.y =
-                acceleration.y *
-                Math.abs(
-                  (translate.y - _this.height / 2 - _this.minTranslate.y) /
-                    _this.height,
-                );
-            } else if (
-              translate.x <= _this.minTranslate.x + _this.width / 2 &&
-              !isLeft
-            ) {
-              direction.x = -1;
-              speed.x =
-                acceleration.x *
-                Math.abs(
-                  (translate.x - _this.width / 2 - _this.minTranslate.x) /
-                    _this.width,
-                );
-            }
-
-            if (_this.autoscrollInterval) {
-              clearInterval(_this.autoscrollInterval);
-              _this.autoscrollInterval = null;
-              _this.isAutoScrolling = false;
-            }
-
-            if (direction.x !== 0 || direction.y !== 0) {
-              _this.autoscrollInterval = setInterval(function() {
-                _this.isAutoScrolling = true;
-                var offset = {
-                  left: speed.x * direction.x,
-                  top: speed.y * direction.y,
-                };
-                _this.scrollContainer.scrollTop += offset.top;
-                _this.scrollContainer.scrollLeft += offset.left;
-                _this.translate.x += offset.left;
-                _this.translate.y += offset.top;
-
-                _this.animateNodes();
-              }, 5);
-            }
-          },
-        );
-
+            _this.isAutoScrolling = false;
+          }
+          if (direction.x !== 0 || direction.y !== 0) {
+            _this.autoscrollInterval = setInterval(function() {
+              _this.isAutoScrolling = true;
+              var offset = {
+                left: speed.x * direction.x,
+                top: speed.y * direction.y,
+              };
+              _this.scrollContainer.scrollTop += offset.top;
+              _this.scrollContainer.scrollLeft += offset.left;
+              _this.translate.x += offset.left;
+              _this.translate.y += offset.top;
+              _this.animateNodes();
+            }, 5);
+          }
+        });
         _this.manager = new Manager();
         _this.events = {
           start: _this.handleStart,
@@ -896,8 +768,8 @@ function sortableContainer(WrappedComponent) {
         _this.wrappedInstanceRef = React.createRef();
         return _this;
       }
-
-      _createClass(WithSortableContainer, [
+      _inherits(WithSortableContainer, _React$Component);
+      return _createClass(WithSortableContainer, [
         {
           key: 'getContext',
           value: function getContext() {
@@ -910,7 +782,6 @@ function sortableContainer(WrappedComponent) {
           key: 'componentDidMount',
           value: function componentDidMount() {
             var _this2 = this;
-
             var useWindowAsScrollContainer = this.props
               .useWindowAsScrollContainer;
             var container = this.getContainer();
@@ -929,14 +800,12 @@ function sortableContainer(WrappedComponent) {
                 ? _this2.document.scrollingElement ||
                   _this2.document.documentElement
                 : _this2.container;
-
               var _loop = function _loop(key) {
                 if (_this2.events.hasOwnProperty(key)) {
                   var eventTarget = _this2.getEventTarget(
                     _this2.container,
                     key,
                   );
-
                   events[key].forEach(function(eventName) {
                     return eventTarget.addEventListener(
                       eventName,
@@ -946,7 +815,6 @@ function sortableContainer(WrappedComponent) {
                   });
                 }
               };
-
               for (var key in _this2.events) {
                 _loop(key);
               }
@@ -957,11 +825,9 @@ function sortableContainer(WrappedComponent) {
           key: 'componentWillUnmount',
           value: function componentWillUnmount() {
             var _this3 = this;
-
             var _loop2 = function _loop2(key) {
               if (_this3.events.hasOwnProperty(key)) {
                 var eventTarget = _this3.getEventTarget(_this3.container, key);
-
                 events[key].forEach(function(eventName) {
                   return (
                     eventTarget &&
@@ -973,7 +839,6 @@ function sortableContainer(WrappedComponent) {
                 });
               }
             };
-
             for (var key in this.events) {
               _loop2(key);
             }
@@ -994,11 +859,9 @@ function sortableContainer(WrappedComponent) {
                 'value or an array of exactly two values. Given %s',
               lockOffset,
             );
-
             var _offsets = _slicedToArray(offsets, 2),
               minLockOffset = _offsets[0],
               maxLockOffset = _offsets[1];
-
             return [
               getLockPixelOffset({
                 lockOffset: minLockOffset,
@@ -1027,7 +890,6 @@ function sortableContainer(WrappedComponent) {
             translate.y -= window.pageYOffset - this.initialWindowScroll.top;
             translate.x -= window.pageXOffset - this.initialWindowScroll.left;
             this.translate = translate;
-
             if (lockToContainerEdges) {
               var _this$getLockPixelOff = this.getLockPixelOffsets(),
                 _this$getLockPixelOff2 = _slicedToArray(
@@ -1036,7 +898,6 @@ function sortableContainer(WrappedComponent) {
                 ),
                 minLockOffset = _this$getLockPixelOff2[0],
                 maxLockOffset = _this$getLockPixelOff2[1];
-
               var minOffset = {
                 x: this.width / 2 - minLockOffset.x,
                 y: this.height / 2 - minLockOffset.y,
@@ -1056,13 +917,11 @@ function sortableContainer(WrappedComponent) {
                 translate.y,
               );
             }
-
             if (lockAxis === 'x') {
               translate.y = 0;
             } else if (lockAxis === 'y') {
               translate.x = 0;
             }
-
             this.helper.style[
               ''.concat(vendorPrefix, 'Transform')
             ] = 'translate3d('
@@ -1098,12 +957,11 @@ function sortableContainer(WrappedComponent) {
             };
             var prevIndex = this.newIndex;
             this.newIndex = null;
-
             for (var i = 0, len = nodes.length; i < len; i++) {
-              var _node3 = nodes[i].node;
-              var _index2 = _node3.sortableInfo.index;
-              var width = _node3.offsetWidth;
-              var height = _node3.offsetHeight;
+              var node = nodes[i].node;
+              var index = node.sortableInfo.index;
+              var width = node.offsetWidth;
+              var height = node.offsetHeight;
               var offset = {
                 width: this.width > width ? width / 2 : this.width / 2,
                 height: this.height > height ? height / 2 : this.height / 2,
@@ -1113,42 +971,35 @@ function sortableContainer(WrappedComponent) {
                 y: 0,
               };
               var edgeOffset = nodes[i].edgeOffset;
-
               if (!edgeOffset) {
-                edgeOffset = getEdgeOffset(_node3, this.container);
+                edgeOffset = getEdgeOffset(node, this.container);
                 nodes[i].edgeOffset = edgeOffset;
               }
-
               var nextNode = i < nodes.length - 1 && nodes[i + 1];
               var prevNode = i > 0 && nodes[i - 1];
-
               if (nextNode && !nextNode.edgeOffset) {
                 nextNode.edgeOffset = getEdgeOffset(
                   nextNode.node,
                   this.container,
                 );
               }
-
-              if (_index2 === this.index) {
+              if (index === this.index) {
                 if (hideSortableGhost) {
-                  this.sortableGhost = _node3;
-                  _node3.style.visibility = 'hidden';
-                  _node3.style.opacity = 0;
+                  this.sortableGhost = node;
+                  node.style.visibility = 'hidden';
+                  node.style.opacity = 0;
                 }
-
                 continue;
               }
-
               if (transitionDuration) {
-                _node3.style[
+                node.style[
                   ''.concat(vendorPrefix, 'TransitionDuration')
                 ] = ''.concat(transitionDuration, 'ms');
               }
-
               if (this.axis.x) {
                 if (this.axis.y) {
                   if (
-                    _index2 < this.index &&
+                    index < this.index &&
                     ((sortingOffset.left +
                       windowScrollDelta.left -
                       offset.width <=
@@ -1161,7 +1012,6 @@ function sortableContainer(WrappedComponent) {
                         edgeOffset.top)
                   ) {
                     translate.x = this.width + this.marginOffset.x;
-
                     if (
                       edgeOffset.left + translate.x >
                       this.containerBoundingRect.width - offset.width
@@ -1172,12 +1022,11 @@ function sortableContainer(WrappedComponent) {
                         translate.y = nextNode.edgeOffset.top - edgeOffset.top;
                       }
                     }
-
                     if (this.newIndex === null) {
-                      this.newIndex = _index2;
+                      this.newIndex = index;
                     }
                   } else if (
-                    _index2 > this.index &&
+                    index > this.index &&
                     ((sortingOffset.left +
                       windowScrollDelta.left +
                       offset.width >=
@@ -1192,7 +1041,6 @@ function sortableContainer(WrappedComponent) {
                         edgeOffset.top + height)
                   ) {
                     translate.x = -(this.width + this.marginOffset.x);
-
                     if (
                       edgeOffset.left + translate.x <
                       this.containerBoundingRect.left + offset.width
@@ -1203,63 +1051,57 @@ function sortableContainer(WrappedComponent) {
                         translate.y = prevNode.edgeOffset.top - edgeOffset.top;
                       }
                     }
-
-                    this.newIndex = _index2;
+                    this.newIndex = index;
                   }
                 } else {
                   if (
-                    _index2 > this.index &&
+                    index > this.index &&
                     sortingOffset.left +
                       windowScrollDelta.left +
                       offset.width >=
                       edgeOffset.left
                   ) {
                     translate.x = -(this.width + this.marginOffset.x);
-                    this.newIndex = _index2;
+                    this.newIndex = index;
                   } else if (
-                    _index2 < this.index &&
+                    index < this.index &&
                     sortingOffset.left + windowScrollDelta.left <=
                       edgeOffset.left + offset.width
                   ) {
                     translate.x = this.width + this.marginOffset.x;
-
                     if (this.newIndex == null) {
-                      this.newIndex = _index2;
+                      this.newIndex = index;
                     }
                   }
                 }
               } else if (this.axis.y) {
                 if (
-                  _index2 > this.index &&
+                  index > this.index &&
                   sortingOffset.top + windowScrollDelta.top + offset.height >=
                     edgeOffset.top
                 ) {
                   translate.y = -(this.height + this.marginOffset.y);
-                  this.newIndex = _index2;
+                  this.newIndex = index;
                 } else if (
-                  _index2 < this.index &&
+                  index < this.index &&
                   sortingOffset.top + windowScrollDelta.top <=
                     edgeOffset.top + offset.height
                 ) {
                   translate.y = this.height + this.marginOffset.y;
-
                   if (this.newIndex == null) {
-                    this.newIndex = _index2;
+                    this.newIndex = index;
                   }
                 }
               }
-
-              _node3.style[
+              node.style[
                 ''.concat(vendorPrefix, 'Transform')
               ] = 'translate3d('
                 .concat(translate.x, 'px,')
                 .concat(translate.y, 'px,0)');
             }
-
             if (this.newIndex == null) {
               this.newIndex = this.index;
             }
-
             if (onSortOver && this.newIndex !== prevIndex) {
               onSortOver({
                 newIndex: this.newIndex,
@@ -1284,11 +1126,9 @@ function sortableContainer(WrappedComponent) {
           key: 'getContainer',
           value: function getContainer() {
             var getContainer = this.props.getContainer;
-
             if (typeof getContainer !== 'function') {
               return this.wrappedInstanceRef.current;
             }
-
             return getContainer(
               config.withRef ? this.getWrappedInstance() : undefined,
             );
@@ -1343,24 +1183,20 @@ function sortableContainer(WrappedComponent) {
           key: 'helperContainer',
           get: function get() {
             var helperContainer = this.props.helperContainer;
-
             if (typeof helperContainer === 'function') {
               return helperContainer();
             }
-
             return this.props.helperContainer || this.document.body;
           },
         },
       ]);
-
-      return WithSortableContainer;
     })(React.Component)),
     _defineProperty(
-      _class,
+      _WithSortableContainer,
       'displayName',
       provideDisplayName('sortableList', WrappedComponent),
     ),
-    _defineProperty(_class, 'defaultProps', {
+    _defineProperty(_WithSortableContainer, 'defaultProps', {
       axis: 'y',
       transitionDuration: 300,
       pressDelay: 0,
@@ -1376,13 +1212,11 @@ function sortableContainer(WrappedComponent) {
           'option',
           'button',
         ];
-
         if (
           disabledElements.indexOf(event.target.tagName.toLowerCase()) !== -1
         ) {
           return true;
         }
-
         return false;
       },
       lockToContainerEdges: false,
@@ -1396,7 +1230,7 @@ function sortableContainer(WrappedComponent) {
       },
       disableAutoscroll: false,
     }),
-    _defineProperty(_class, 'propTypes', {
+    _defineProperty(_WithSortableContainer, 'propTypes', {
       axis: PropTypes.oneOf(['x', 'y', 'xy']),
       distance: PropTypes.number,
       lockAxis: PropTypes.string,
@@ -1432,13 +1266,33 @@ function sortableContainer(WrappedComponent) {
       ]),
       disableAutoscroll: PropTypes.bool,
     }),
-    _temp
+    _WithSortableContainer
   );
 }
 
+function _callSuper$1(t, o, e) {
+  return (
+    (o = _getPrototypeOf(o)),
+    _possibleConstructorReturn(
+      t,
+      _isNativeReflectConstruct$1()
+        ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor)
+        : o.apply(t, e),
+    )
+  );
+}
+function _isNativeReflectConstruct$1() {
+  try {
+    var t = !Boolean.prototype.valueOf.call(
+      Reflect.construct(Boolean, [], function() {}),
+    );
+  } catch (t) {}
+  return (_isNativeReflectConstruct$1 = function _isNativeReflectConstruct() {
+    return !!t;
+  })();
+}
 function sortableElement(WrappedComponent) {
-  var _class, _temp;
-
+  var _WithSortableElement;
   var config =
     arguments.length > 1 && arguments[1] !== undefined
       ? arguments[1]
@@ -1446,23 +1300,16 @@ function sortableElement(WrappedComponent) {
           withRef: false,
         };
   return (
-    (_temp = _class = (function(_React$Component) {
-      _inherits(WithSortableElement, _React$Component);
-
+    (_WithSortableElement = (function(_React$Component) {
       function WithSortableElement(props) {
         var _this;
-
         _classCallCheck(this, WithSortableElement);
-
-        _this = _possibleConstructorReturn(
-          this,
-          _getPrototypeOf(WithSortableElement).call(this, props),
-        );
+        _this = _callSuper$1(this, WithSortableElement, [props]);
         _this.wrappedInstanceRef = React.createRef();
         return _this;
       }
-
-      _createClass(WithSortableElement, [
+      _inherits(WithSortableElement, _React$Component);
+      return _createClass(WithSortableElement, [
         {
           key: 'componentDidMount',
           value: function componentDidMount() {
@@ -1470,7 +1317,6 @@ function sortableElement(WrappedComponent) {
               collection = _this$props.collection,
               disabled = _this$props.disabled,
               index = _this$props.index;
-
             if (!disabled) {
               this.setDraggable(collection, index);
             }
@@ -1482,13 +1328,11 @@ function sortableElement(WrappedComponent) {
             if (this.props.index !== prevProps.index && this.node) {
               this.node.sortableInfo.index = this.props.index;
             }
-
             if (this.props.disabled !== prevProps.disabled) {
               var _this$props2 = this.props,
                 collection = _this$props2.collection,
                 disabled = _this$props2.disabled,
                 index = _this$props2.index;
-
               if (disabled) {
                 this.removeDraggable(collection);
               } else {
@@ -1506,7 +1350,6 @@ function sortableElement(WrappedComponent) {
             var _this$props3 = this.props,
               collection = _this$props3.collection,
               disabled = _this$props3.disabled;
-
             if (!disabled) {
               this.removeDraggable(collection);
             }
@@ -1560,30 +1403,52 @@ function sortableElement(WrappedComponent) {
           },
         },
       ]);
-
-      return WithSortableElement;
     })(React.Component)),
     _defineProperty(
-      _class,
+      _WithSortableElement,
       'displayName',
       provideDisplayName('sortableElement', WrappedComponent),
     ),
-    _defineProperty(_class, 'contextType', SortableElementContext),
-    _defineProperty(_class, 'propTypes', {
+    _defineProperty(
+      _WithSortableElement,
+      'contextType',
+      SortableElementContext,
+    ),
+    _defineProperty(_WithSortableElement, 'propTypes', {
       index: PropTypes.number.isRequired,
       collection: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
       disabled: PropTypes.bool,
     }),
-    _defineProperty(_class, 'defaultProps', {
+    _defineProperty(_WithSortableElement, 'defaultProps', {
       collection: 0,
     }),
-    _temp
+    _WithSortableElement
   );
 }
 
+function _callSuper$2(t, o, e) {
+  return (
+    (o = _getPrototypeOf(o)),
+    _possibleConstructorReturn(
+      t,
+      _isNativeReflectConstruct$2()
+        ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor)
+        : o.apply(t, e),
+    )
+  );
+}
+function _isNativeReflectConstruct$2() {
+  try {
+    var t = !Boolean.prototype.valueOf.call(
+      Reflect.construct(Boolean, [], function() {}),
+    );
+  } catch (t) {}
+  return (_isNativeReflectConstruct$2 = function _isNativeReflectConstruct() {
+    return !!t;
+  })();
+}
 function sortableHandle(WrappedComponent) {
-  var _class, _temp;
-
+  var _WithSortableHandle;
   var config =
     arguments.length > 1 && arguments[1] !== undefined
       ? arguments[1]
@@ -1591,28 +1456,20 @@ function sortableHandle(WrappedComponent) {
           withRef: false,
         };
   return (
-    (_temp = _class = (function(_React$Component) {
-      _inherits(WithSortableHandle, _React$Component);
-
+    (_WithSortableHandle = (function(_React$Component) {
       function WithSortableHandle(props) {
         var _this;
-
         _classCallCheck(this, WithSortableHandle);
-
-        _this = _possibleConstructorReturn(
-          this,
-          _getPrototypeOf(WithSortableHandle).call(this, props),
-        );
+        _this = _callSuper$2(this, WithSortableHandle, [props]);
         _this.wrappedInstanceRef = React.createRef();
         return _this;
       }
-
-      _createClass(WithSortableHandle, [
+      _inherits(WithSortableHandle, _React$Component);
+      return _createClass(WithSortableHandle, [
         {
           key: 'componentDidMount',
           value: function componentDidMount() {
             var node = this.wrappedInstanceRef.current;
-
             if (node) {
               node.sortableHandle = true;
             }
@@ -1644,15 +1501,13 @@ function sortableHandle(WrappedComponent) {
           },
         },
       ]);
-
-      return WithSortableHandle;
     })(React.Component)),
     _defineProperty(
-      _class,
+      _WithSortableHandle,
       'displayName',
       provideDisplayName('sortableHandle', WrappedComponent),
     ),
-    _temp
+    _WithSortableHandle
   );
 }
 
