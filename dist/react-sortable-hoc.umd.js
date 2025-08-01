@@ -811,6 +811,7 @@
               var _this$props = _this.props,
                 distance = _this$props.distance,
                 shouldCancelStart = _this$props.shouldCancelStart;
+              console.log(distance);
 
               if (event.button === 2 || shouldCancelStart(event)) {
                 return;
