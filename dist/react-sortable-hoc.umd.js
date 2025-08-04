@@ -1439,11 +1439,11 @@
               var sortingOffset = {
                 left:
                   this.offsetEdge.left +
-                  this.translate.x +
+                  this.translate.x * 2 +
                   containerScrollDelta.left,
                 top:
                   this.offsetEdge.top +
-                  this.translate.y +
+                  this.translate.y * 2 +
                   containerScrollDelta.top,
               };
               var windowScrollDelta = {
@@ -1632,7 +1632,7 @@
                 return (_this$wrappedInstance2 = this.wrappedInstanceRef) ===
                   null || _this$wrappedInstance2 === void 0
                   ? void 0
-                  : _this$wrappedInstance2.current.firstElementChild;
+                  : _this$wrappedInstance2.current;
               }
               return getContainer(
                 config.withRef ? this.getWrappedInstance() : undefined,
@@ -1906,7 +1906,7 @@
                 config.withRef,
                 'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableElement() call',
               );
-              return this.nodeRef.current.firstElementChild;
+              return this.refs.wrappedInstance;
             },
           },
           {
@@ -2014,15 +2014,11 @@
           {
             key: 'getWrappedInstance',
             value: function getWrappedInstance() {
-              var _this$nodeRef2;
               invariant_1(
                 config.withRef,
                 'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableHandle() call',
               );
-              return (_this$nodeRef2 = this.nodeRef) === null ||
-                _this$nodeRef2 === void 0
-                ? void 0
-                : _this$nodeRef2.current.firstElementChild;
+              return this.refs.wrappedInstance;
             },
           },
           {
