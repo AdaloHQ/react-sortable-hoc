@@ -16,7 +16,9 @@ export default function sortableHandle(
     }
 
     componentDidMount() {
-      const node = this.wrappedInstanceRef.current;
+      const node = this.wrappedInstanceRef?.current?.firstElementChild;
+      // eslint-disable-next-line no-console
+      console.log('sortableHandle: ', node);
       if (node) {
         node.sortableHandle = true;
       }
@@ -27,13 +29,16 @@ export default function sortableHandle(
         config.withRef,
         'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableHandle() call',
       );
-      return this.wrappedInstanceRef.current;
+      return this.wrappedInstanceRef;
     }
 
     render() {
       const ref = config.withRef ? this.wrappedInstanceRef : null;
-
-      return <WrappedComponent ref={ref} {...this.props} />;
+      return (
+        <div ref={this.nodeRef}>
+          <WrappedComponent ref={ref} {...this.props} />
+        </div>
+      );
     }
   };
 }

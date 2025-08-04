@@ -27,14 +27,10 @@ export default function sortableElement(
       collection: 0,
     };
 
-    constructor(props) {
-      super(props);
-      this.wrappedInstanceRef = React.createRef();
-    }
+    nodeRef = React.createRef();
 
     componentDidMount() {
       const {collection, disabled, index} = this.props;
-
       if (!disabled) {
         this.setDraggable(collection, index);
       }
@@ -45,8 +41,8 @@ export default function sortableElement(
         this.node.sortableInfo.index = this.props.index;
       }
 
+      const {collection, disabled, index} = this.props;
       if (this.props.disabled !== prevProps.disabled) {
-        const {collection, disabled, index} = this.props;
         if (disabled) {
           this.removeDraggable(collection);
         } else {
@@ -54,7 +50,7 @@ export default function sortableElement(
         }
       } else if (this.props.collection !== prevProps.collection) {
         this.removeDraggable(prevProps.collection);
-        this.setDraggable(this.props.collection, this.props.index);
+        this.setDraggable(collection, index);
       }
     }
 
@@ -67,7 +63,12 @@ export default function sortableElement(
     }
 
     setDraggable(collection, index) {
-      const node = this.wrappedInstanceRef.current;
+      const node = this.nodeRef.current.firstElementChild;
+
+      if (!node) {
+        console.warn('Sortable nodeRef is not attached');
+        return;
+      }
 
       node.sortableInfo = {
         index,
@@ -89,17 +90,16 @@ export default function sortableElement(
         config.withRef,
         'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableElement() call',
       );
-      return this.wrappedInstanceRef.current;
+      return this.nodeRef.current.firstElementChild;
     }
 
     render() {
-      const ref = config.withRef ? this.wrappedInstanceRef : null;
-
+      const props = omit(this.props, 'collection', 'disabled', 'index');
+      const ref = config.withRef ? this.nodeRef : null;
       return (
-        <WrappedComponent
-          ref={ref}
-          {...omit(this.props, 'collection', 'disabled', 'index')}
-        />
+        <div ref={this.nodeRef}>
+          <WrappedComponent ref={ref} {...props} />
+        </div>
       );
     }
   };
