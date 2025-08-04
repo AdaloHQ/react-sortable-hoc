@@ -786,8 +786,13 @@ function sortableContainer(WrappedComponent) {
               .useWindowAsScrollContainer;
             var container = this.getContainer();
             Promise.resolve(container).then(function(containerNode) {
+              var _this2$container;
               _this2.container = containerNode;
-              _this2.document = _this2.container.ownerDocument || document;
+              _this2.document =
+                ((_this2$container = _this2.container) === null ||
+                _this2$container === void 0
+                  ? void 0
+                  : _this2$container.ownerDocument) || document;
               var contentWindow =
                 _this2.props.contentWindow ||
                 _this2.document.defaultView ||
@@ -1127,7 +1132,11 @@ function sortableContainer(WrappedComponent) {
           value: function getContainer() {
             var getContainer = this.props.getContainer;
             if (typeof getContainer !== 'function') {
-              return this.wrappedInstanceRef.current;
+              var _this$wrappedInstance;
+              return (_this$wrappedInstance = this.wrappedInstanceRef) ===
+                null || _this$wrappedInstance === void 0
+                ? void 0
+                : _this$wrappedInstance.current.firstElementChild;
             }
             return getContainer(
               config.withRef ? this.getWrappedInstance() : undefined,
@@ -1144,35 +1153,41 @@ function sortableContainer(WrappedComponent) {
                 value: this.getContext(),
               },
               React.createElement(
-                WrappedComponent,
-                _extends(
-                  {
-                    ref: ref,
-                  },
-                  omit(
-                    this.props,
-                    'contentWindow',
-                    'useWindowAsScrollContainer',
-                    'distance',
-                    'helperClass',
-                    'hideSortableGhost',
-                    'transitionDuration',
-                    'useDragHandle',
-                    'pressDelay',
-                    'pressThreshold',
-                    'shouldCancelStart',
-                    'updateBeforeSortStart',
-                    'onSortStart',
-                    'onSortMove',
-                    'onSortEnd',
-                    'axis',
-                    'lockAxis',
-                    'lockOffset',
-                    'lockToContainerEdges',
-                    'getContainer',
-                    'getHelperDimensions',
-                    'helperContainer',
-                    'disableAutoscroll',
+                'div',
+                {
+                  ref: this.wrappedInstanceRef,
+                },
+                React.createElement(
+                  WrappedComponent,
+                  _extends(
+                    {
+                      ref: ref,
+                    },
+                    omit(
+                      this.props,
+                      'contentWindow',
+                      'useWindowAsScrollContainer',
+                      'distance',
+                      'helperClass',
+                      'hideSortableGhost',
+                      'transitionDuration',
+                      'useDragHandle',
+                      'pressDelay',
+                      'pressThreshold',
+                      'shouldCancelStart',
+                      'updateBeforeSortStart',
+                      'onSortStart',
+                      'onSortMove',
+                      'onSortEnd',
+                      'axis',
+                      'lockAxis',
+                      'lockOffset',
+                      'lockToContainerEdges',
+                      'getContainer',
+                      'getHelperDimensions',
+                      'helperContainer',
+                      'disableAutoscroll',
+                    ),
                   ),
                 ),
               ),
@@ -1301,11 +1316,18 @@ function sortableElement(WrappedComponent) {
         };
   return (
     (_WithSortableElement = (function(_React$Component) {
-      function WithSortableElement(props) {
+      function WithSortableElement() {
         var _this;
         _classCallCheck(this, WithSortableElement);
-        _this = _callSuper$1(this, WithSortableElement, [props]);
-        _this.wrappedInstanceRef = React.createRef();
+        for (
+          var _len = arguments.length, args = new Array(_len), _key = 0;
+          _key < _len;
+          _key++
+        ) {
+          args[_key] = arguments[_key];
+        }
+        _this = _callSuper$1(this, WithSortableElement, [].concat(args));
+        _defineProperty(_this, 'nodeRef', React.createRef());
         return _this;
       }
       _inherits(WithSortableElement, _React$Component);
@@ -1328,11 +1350,11 @@ function sortableElement(WrappedComponent) {
             if (this.props.index !== prevProps.index && this.node) {
               this.node.sortableInfo.index = this.props.index;
             }
+            var _this$props2 = this.props,
+              collection = _this$props2.collection,
+              disabled = _this$props2.disabled,
+              index = _this$props2.index;
             if (this.props.disabled !== prevProps.disabled) {
-              var _this$props2 = this.props,
-                collection = _this$props2.collection,
-                disabled = _this$props2.disabled,
-                index = _this$props2.index;
               if (disabled) {
                 this.removeDraggable(collection);
               } else {
@@ -1340,7 +1362,7 @@ function sortableElement(WrappedComponent) {
               }
             } else if (this.props.collection !== prevProps.collection) {
               this.removeDraggable(prevProps.collection);
-              this.setDraggable(this.props.collection, this.props.index);
+              this.setDraggable(collection, index);
             }
           },
         },
@@ -1358,7 +1380,11 @@ function sortableElement(WrappedComponent) {
         {
           key: 'setDraggable',
           value: function setDraggable(collection, index) {
-            var node = this.wrappedInstanceRef.current;
+            var node = this.nodeRef.current.firstElementChild;
+            if (!node) {
+              console.warn('Sortable nodeRef is not attached');
+              return;
+            }
             node.sortableInfo = {
               index: index,
               collection: collection,
@@ -1384,20 +1410,27 @@ function sortableElement(WrappedComponent) {
               config.withRef,
               'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableElement() call',
             );
-            return this.wrappedInstanceRef.current;
+            return this.nodeRef.current.firstElementChild;
           },
         },
         {
           key: 'render',
           value: function render() {
-            var ref = config.withRef ? this.wrappedInstanceRef : null;
+            var props = omit(this.props, 'collection', 'disabled', 'index');
+            var ref = config.withRef ? this.nodeRef : null;
             return React.createElement(
-              WrappedComponent,
-              _extends(
-                {
-                  ref: ref,
-                },
-                omit(this.props, 'collection', 'disabled', 'index'),
+              'div',
+              {
+                ref: this.nodeRef,
+              },
+              React.createElement(
+                WrappedComponent,
+                _extends(
+                  {
+                    ref: ref,
+                  },
+                  props,
+                ),
               ),
             );
           },
@@ -1469,7 +1502,16 @@ function sortableHandle(WrappedComponent) {
         {
           key: 'componentDidMount',
           value: function componentDidMount() {
-            var node = this.wrappedInstanceRef.current;
+            var _this$wrappedInstance;
+            var node =
+              (_this$wrappedInstance = this.wrappedInstanceRef) === null ||
+              _this$wrappedInstance === void 0 ||
+              (_this$wrappedInstance = _this$wrappedInstance.current) ===
+                null ||
+              _this$wrappedInstance === void 0
+                ? void 0
+                : _this$wrappedInstance.firstElementChild;
+            console.log('sortableHandle: ', node);
             if (node) {
               node.sortableHandle = true;
             }
@@ -1482,7 +1524,7 @@ function sortableHandle(WrappedComponent) {
               config.withRef,
               'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableHandle() call',
             );
-            return this.wrappedInstanceRef.current;
+            return this.wrappedInstanceRef;
           },
         },
         {
@@ -1490,12 +1532,18 @@ function sortableHandle(WrappedComponent) {
           value: function render() {
             var ref = config.withRef ? this.wrappedInstanceRef : null;
             return React.createElement(
-              WrappedComponent,
-              _extends(
-                {
-                  ref: ref,
-                },
-                this.props,
+              'div',
+              {
+                ref: this.nodeRef,
+              },
+              React.createElement(
+                WrappedComponent,
+                _extends(
+                  {
+                    ref: ref,
+                  },
+                  this.props,
+                ),
               ),
             );
           },
