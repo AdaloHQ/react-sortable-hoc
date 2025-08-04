@@ -797,7 +797,6 @@
             var _this$props = _this.props,
               distance = _this$props.distance,
               shouldCancelStart = _this$props.shouldCancelStart;
-            console.log('distance: ', distance);
             if (event.button === 2 || shouldCancelStart(event)) {
               return;
             }
@@ -1613,11 +1612,15 @@
           {
             key: 'getWrappedInstance',
             value: function getWrappedInstance() {
+              var _this$wrappedInstance;
               invariant_1(
                 config.withRef,
                 'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableContainer() call',
               );
-              return this.refs.wrappedInstance;
+              return (_this$wrappedInstance = this.wrappedInstanceRef) ===
+                null || _this$wrappedInstance === void 0
+                ? void 0
+                : _this$wrappedInstance.current.firstElementChild;
             },
           },
           {
@@ -1625,11 +1628,11 @@
             value: function getContainer() {
               var getContainer = this.props.getContainer;
               if (typeof getContainer !== 'function') {
-                var _this$wrappedInstance;
-                return (_this$wrappedInstance = this.wrappedInstanceRef) ===
-                  null || _this$wrappedInstance === void 0
+                var _this$wrappedInstance2;
+                return (_this$wrappedInstance2 = this.wrappedInstanceRef) ===
+                  null || _this$wrappedInstance2 === void 0
                   ? void 0
-                  : _this$wrappedInstance.current.firstElementChild;
+                  : _this$wrappedInstance2.current.firstElementChild;
               }
               return getContainer(
                 config.withRef ? this.getWrappedInstance() : undefined,
@@ -1865,7 +1868,6 @@
               var _this$props3 = this.props,
                 collection = _this$props3.collection,
                 disabled = _this$props3.disabled;
-              console.log('collection: ', collection);
               if (!disabled) {
                 this.removeDraggable(collection);
               }
@@ -1988,7 +1990,7 @@
           var _this;
           _classCallCheck(this, WithSortableHandle);
           _this = _callSuper$2(this, WithSortableHandle, [props]);
-          _this.wrappedInstanceRef = React.createRef();
+          _this.nodeRef = React.createRef();
           return _this;
         }
         _inherits(WithSortableHandle, _React$Component);
@@ -1996,17 +1998,15 @@
           {
             key: 'componentDidMount',
             value: function componentDidMount() {
-              var _this$wrappedInstance;
+              var _this$nodeRef;
               var node =
-                (_this$wrappedInstance = this.wrappedInstanceRef) === null ||
-                _this$wrappedInstance === void 0 ||
-                (_this$wrappedInstance = _this$wrappedInstance.current) ===
-                  null ||
-                _this$wrappedInstance === void 0
+                (_this$nodeRef = this.nodeRef) === null ||
+                _this$nodeRef === void 0
                   ? void 0
-                  : _this$wrappedInstance.firstElementChild;
-              console.log('sortableHandle: ', node);
+                  : _this$nodeRef.current;
               if (node) {
+                var parentParentNode = node.parentElement;
+                parentParentNode.sortableHandle = true;
                 node.sortableHandle = true;
               }
             },
@@ -2014,11 +2014,15 @@
           {
             key: 'getWrappedInstance',
             value: function getWrappedInstance() {
+              var _this$nodeRef2;
               invariant_1(
                 config.withRef,
                 'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableHandle() call',
               );
-              return this.wrappedInstanceRef;
+              return (_this$nodeRef2 = this.nodeRef) === null ||
+                _this$nodeRef2 === void 0
+                ? void 0
+                : _this$nodeRef2.current.firstElementChild;
             },
           },
           {

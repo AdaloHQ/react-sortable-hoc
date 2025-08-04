@@ -148,7 +148,7 @@ export default function sortableContainer(
 
         for (const key in this.events) {
           if (this.events.hasOwnProperty(key)) {
-            let eventTarget = this.getEventTarget(this.container, key);
+            const eventTarget = this.getEventTarget(this.container, key);
 
             events[key].forEach((eventName) =>
               eventTarget.addEventListener(eventName, this.events[key], false),
@@ -161,7 +161,7 @@ export default function sortableContainer(
     componentWillUnmount() {
       for (const key in this.events) {
         if (this.events.hasOwnProperty(key)) {
-          let eventTarget = this.getEventTarget(this.container, key);
+          const eventTarget = this.getEventTarget(this.container, key);
 
           events[key].forEach(
             (eventName) =>
@@ -182,8 +182,6 @@ export default function sortableContainer(
 
     handleStart = (event) => {
       const {distance, shouldCancelStart} = this.props;
-
-      console.log('distance: ', distance);
 
       if (event.button === 2 || shouldCancelStart(event)) {
         return;
@@ -878,7 +876,7 @@ export default function sortableContainer(
         'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableContainer() call',
       );
 
-      return this.refs.wrappedInstance;
+      return this.wrappedInstanceRef?.current.firstElementChild;
     }
 
     getContainer() {

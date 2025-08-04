@@ -12,14 +12,14 @@ export default function sortableHandle(
 
     constructor(props) {
       super(props);
-      this.wrappedInstanceRef = React.createRef();
+      this.nodeRef = React.createRef();
     }
 
     componentDidMount() {
-      const node = this.wrappedInstanceRef?.current?.firstElementChild;
-      // eslint-disable-next-line no-console
-      console.log('sortableHandle: ', node);
+      const node = this.nodeRef?.current;
       if (node) {
+        const parentParentNode = node.parentElement;
+        parentParentNode.sortableHandle = true;
         node.sortableHandle = true;
       }
     }
@@ -29,7 +29,8 @@ export default function sortableHandle(
         config.withRef,
         'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableHandle() call',
       );
-      return this.wrappedInstanceRef;
+
+      return this.nodeRef?.current.firstElementChild;
     }
 
     render() {

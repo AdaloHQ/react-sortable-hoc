@@ -56,7 +56,6 @@ export default function sortableElement(
 
     componentWillUnmount() {
       const {collection, disabled} = this.props;
-      console.log('collection: ', collection);
 
       if (!disabled) {
         this.removeDraggable(collection);
@@ -67,6 +66,7 @@ export default function sortableElement(
       const node = this.nodeRef.current.firstElementChild;
 
       if (!node) {
+        // eslint-disable-next-line no-console
         console.warn('Sortable nodeRef is not attached');
         return;
       }
