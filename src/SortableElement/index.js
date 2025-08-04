@@ -91,7 +91,7 @@ export default function sortableElement(
         config.withRef,
         'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableElement() call',
       );
-      return this.nodeRef.current.firstElementChild;
+      return this.refs.wrappedInstance;
     }
 
     render() {

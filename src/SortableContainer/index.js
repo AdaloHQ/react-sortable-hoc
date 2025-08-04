@@ -593,8 +593,11 @@ export default function sortableContainer(
       };
       const sortingOffset = {
         left:
-          this.offsetEdge.left + this.translate.x + containerScrollDelta.left,
-        top: this.offsetEdge.top + this.translate.y + containerScrollDelta.top,
+          this.offsetEdge.left +
+          this.translate.x * 2 +
+          containerScrollDelta.left,
+        top:
+          this.offsetEdge.top + this.translate.y * 2 + containerScrollDelta.top,
       };
       const windowScrollDelta = {
         top: window.pageYOffset - this.initialWindowScroll.top,
@@ -883,7 +886,7 @@ export default function sortableContainer(
       const {getContainer} = this.props;
 
       if (typeof getContainer !== 'function') {
-        return this.wrappedInstanceRef?.current.firstElementChild;
+        return this.wrappedInstanceRef?.current;
       }
 
       return getContainer(
