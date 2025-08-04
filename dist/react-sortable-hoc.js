@@ -314,7 +314,7 @@ function sortableContainer(WrappedComponent) {
           var _this$props = _this.props,
             distance = _this$props.distance,
             shouldCancelStart = _this$props.shouldCancelStart;
-          console.log(distance);
+          console.log('distance: ', distance);
           if (event.button === 2 || shouldCancelStart(event)) {
             return;
           }
@@ -1146,7 +1146,7 @@ function sortableContainer(WrappedComponent) {
         {
           key: 'render',
           value: function render() {
-            var ref = config.withRef ? this.wrappedInstanceRef : null;
+            var ref = config.withRef ? 'wrappedInstance' : null;
             return React.createElement(
               SortableElementContext.Provider,
               {
@@ -1372,6 +1372,7 @@ function sortableElement(WrappedComponent) {
             var _this$props3 = this.props,
               collection = _this$props3.collection,
               disabled = _this$props3.disabled;
+            console.log('collection: ', collection);
             if (!disabled) {
               this.removeDraggable(collection);
             }
@@ -1417,7 +1418,7 @@ function sortableElement(WrappedComponent) {
           key: 'render',
           value: function render() {
             var props = omit(this.props, 'collection', 'disabled', 'index');
-            var ref = config.withRef ? this.nodeRef : null;
+            var ref = config.withRef ? 'wrappedInstance' : null;
             return React.createElement(
               'div',
               {
@@ -1530,7 +1531,7 @@ function sortableHandle(WrappedComponent) {
         {
           key: 'render',
           value: function render() {
-            var ref = config.withRef ? this.wrappedInstanceRef : null;
+            var ref = config.withRef ? 'wrappedInstance' : null;
             return React.createElement(
               'div',
               {

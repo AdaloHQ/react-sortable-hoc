@@ -183,7 +183,7 @@ export default function sortableContainer(
     handleStart = (event) => {
       const {distance, shouldCancelStart} = this.props;
 
-      console.log(distance);
+      console.log('distance: ', distance);
 
       if (event.button === 2 || shouldCancelStart(event)) {
         return;
@@ -894,7 +894,7 @@ export default function sortableContainer(
     }
 
     render() {
-      const ref = config.withRef ? this.wrappedInstanceRef : null;
+      const ref = config.withRef ? 'wrappedInstance' : null;
 
       return (
         <SortableElementContext.Provider value={this.getContext()}>

@@ -33,7 +33,7 @@ export default function sortableHandle(
     }
 
     render() {
-      const ref = config.withRef ? this.wrappedInstanceRef : null;
+      const ref = config.withRef ? 'wrappedInstance' : null;
       return (
         <div ref={this.nodeRef}>
           <WrappedComponent ref={ref} {...this.props} />

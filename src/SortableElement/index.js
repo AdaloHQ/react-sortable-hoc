@@ -56,6 +56,7 @@ export default function sortableElement(
 
     componentWillUnmount() {
       const {collection, disabled} = this.props;
+      console.log('collection: ', collection);
 
       if (!disabled) {
         this.removeDraggable(collection);
@@ -95,7 +96,7 @@ export default function sortableElement(
 
     render() {
       const props = omit(this.props, 'collection', 'disabled', 'index');
-      const ref = config.withRef ? this.nodeRef : null;
+      const ref = config.withRef ? 'wrappedInstance' : null;
       return (
         <div ref={this.nodeRef}>
           <WrappedComponent ref={ref} {...props} />
