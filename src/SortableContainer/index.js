@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {findDOMNode} from 'react-dom';
 import invariant from 'invariant';
 
 import Manager from '../Manager';
@@ -17,6 +16,7 @@ import {
   provideDisplayName,
   omit,
 } from '../utils';
+import SortableElementContext from '../contexts/SortableElementContext';
 
 export default function sortableContainer(
   WrappedComponent,
@@ -38,6 +38,7 @@ export default function sortableContainer(
       );
 
       this.state = {};
+      this.wrappedInstanceRef = React.createRef();
     }
 
     static displayName = provideDisplayName('sortableList', WrappedComponent);
@@ -115,11 +116,7 @@ export default function sortableContainer(
       disableAutoscroll: PropTypes.bool,
     };
 
-    static childContextTypes = {
-      manager: PropTypes.object.isRequired,
-    };
-
-    getChildContext() {
+    getContext() {
       return {
         manager: this.manager,
       };
@@ -138,7 +135,7 @@ export default function sortableContainer(
 
       Promise.resolve(container).then((containerNode) => {
         this.container = containerNode;
-        this.document = this.container.ownerDocument || document;
+        this.document = this.container?.ownerDocument || document;
 
         const contentWindow =
           this.props.contentWindow || this.document.defaultView || window;
@@ -151,7 +148,7 @@ export default function sortableContainer(
 
         for (const key in this.events) {
           if (this.events.hasOwnProperty(key)) {
-            let eventTarget = this.getEventTarget(this.container, key);
+            const eventTarget = this.getEventTarget(this.container, key);
 
             events[key].forEach((eventName) =>
               eventTarget.addEventListener(eventName, this.events[key], false),
@@ -164,7 +161,7 @@ export default function sortableContainer(
     componentWillUnmount() {
       for (const key in this.events) {
         if (this.events.hasOwnProperty(key)) {
-          let eventTarget = this.getEventTarget(this.container, key);
+          const eventTarget = this.getEventTarget(this.container, key);
 
           events[key].forEach(
             (eventName) =>
@@ -596,8 +593,11 @@ export default function sortableContainer(
       };
       const sortingOffset = {
         left:
-          this.offsetEdge.left + this.translate.x + containerScrollDelta.left,
-        top: this.offsetEdge.top + this.translate.y + containerScrollDelta.top,
+          this.offsetEdge.left +
+          this.translate.x * 2 +
+          containerScrollDelta.left,
+        top:
+          this.offsetEdge.top + this.translate.y * 2 + containerScrollDelta.top,
       };
       const windowScrollDelta = {
         top: window.pageYOffset - this.initialWindowScroll.top,
@@ -879,14 +879,14 @@ export default function sortableContainer(
         'To access the wrapped instance, you need to pass in {withRef: true} as the second argument of the SortableContainer() call',
       );
 
-      return this.refs.wrappedInstance;
+      return this.wrappedInstanceRef?.current.firstElementChild;
     }
 
     getContainer() {
       const {getContainer} = this.props;
 
       if (typeof getContainer !== 'function') {
-        return findDOMNode(this);
+        return this.wrappedInstanceRef?.current;
       }
 
       return getContainer(
@@ -898,34 +898,38 @@ export default function sortableContainer(
       const ref = config.withRef ? 'wrappedInstance' : null;
 
       return (
-        <WrappedComponent
-          ref={ref}
-          {...omit(
-            this.props,
-            'contentWindow',
-            'useWindowAsScrollContainer',
-            'distance',
-            'helperClass',
-            'hideSortableGhost',
-            'transitionDuration',
-            'useDragHandle',
-            'pressDelay',
-            'pressThreshold',
-            'shouldCancelStart',
-            'updateBeforeSortStart',
-            'onSortStart',
-            'onSortMove',
-            'onSortEnd',
-            'axis',
-            'lockAxis',
-            'lockOffset',
-            'lockToContainerEdges',
-            'getContainer',
-            'getHelperDimensions',
-            'helperContainer',
-            'disableAutoscroll',
-          )}
-        />
+        <SortableElementContext.Provider value={this.getContext()}>
+          <div ref={this.wrappedInstanceRef}>
+            <WrappedComponent
+              ref={ref}
+              {...omit(
+                this.props,
+                'contentWindow',
+                'useWindowAsScrollContainer',
+                'distance',
+                'helperClass',
+                'hideSortableGhost',
+                'transitionDuration',
+                'useDragHandle',
+                'pressDelay',
+                'pressThreshold',
+                'shouldCancelStart',
+                'updateBeforeSortStart',
+                'onSortStart',
+                'onSortMove',
+                'onSortEnd',
+                'axis',
+                'lockAxis',
+                'lockOffset',
+                'lockToContainerEdges',
+                'getContainer',
+                'getHelperDimensions',
+                'helperContainer',
+                'disableAutoscroll',
+              )}
+            />
+          </div>
+        </SortableElementContext.Provider>
       );
     }
 

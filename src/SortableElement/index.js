@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import {findDOMNode} from 'react-dom';
 import invariant from 'invariant';
 
 import {provideDisplayName, omit} from '../utils';
+import SortableElementContext from '../contexts/SortableElementContext';
 
 export default function sortableElement(
   WrappedComponent,
@@ -15,9 +15,7 @@ export default function sortableElement(
       WrappedComponent,
     );
 
-    static contextTypes = {
-      manager: PropTypes.object.isRequired,
-    };
+    static contextType = SortableElementContext;
 
     static propTypes = {
       index: PropTypes.number.isRequired,
@@ -29,29 +27,30 @@ export default function sortableElement(
       collection: 0,
     };
 
+    nodeRef = React.createRef();
+
     componentDidMount() {
       const {collection, disabled, index} = this.props;
-
       if (!disabled) {
         this.setDraggable(collection, index);
       }
     }
 
-    componentWillReceiveProps(nextProps) {
-      if (this.props.index !== nextProps.index && this.node) {
-        this.node.sortableInfo.index = nextProps.index;
+    componentDidUpdate(prevProps) {
+      if (this.props.index !== prevProps.index && this.node) {
+        this.node.sortableInfo.index = this.props.index;
       }
 
-      if (this.props.disabled !== nextProps.disabled) {
-        const {collection, disabled, index} = nextProps;
+      const {collection, disabled, index} = this.props;
+      if (this.props.disabled !== prevProps.disabled) {
         if (disabled) {
           this.removeDraggable(collection);
         } else {
           this.setDraggable(collection, index);
         }
-      } else if (this.props.collection !== nextProps.collection) {
-        this.removeDraggable(this.props.collection);
-        this.setDraggable(nextProps.collection, nextProps.index);
+      } else if (this.props.collection !== prevProps.collection) {
+        this.removeDraggable(prevProps.collection);
+        this.setDraggable(collection, index);
       }
     }
 
@@ -64,7 +63,13 @@ export default function sortableElement(
     }
 
     setDraggable(collection, index) {
-      const node = findDOMNode(this);
+      const node = this.nodeRef.current.firstElementChild;
+
+      if (!node) {
+        // eslint-disable-next-line no-console
+        console.warn('Sortable nodeRef is not attached');
+        return;
+      }
 
       node.sortableInfo = {
         index,
@@ -90,13 +95,12 @@ export default function sortableElement(
     }
 
     render() {
+      const props = omit(this.props, 'collection', 'disabled', 'index');
       const ref = config.withRef ? 'wrappedInstance' : null;
-
       return (
-        <WrappedComponent
-          ref={ref}
-          {...omit(this.props, 'collection', 'disabled', 'index')}
-        />
+        <div ref={this.nodeRef}>
+          <WrappedComponent ref={ref} {...props} />
+        </div>
       );
     }
   };

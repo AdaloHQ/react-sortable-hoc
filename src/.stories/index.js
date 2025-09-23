@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import {storiesOf} from '@storybook/react';
 import style from './Storybook.scss';
 import {
@@ -243,6 +242,11 @@ class TableWrapper extends Component {
     itemHeight: PropTypes.number,
     onSortEnd: PropTypes.func,
   };
+
+  getContainer() {
+    return this.wrappedInstanceRef?.current?.firstElementChild?.Grid;
+  }
+
   render() {
     const {
       className,
@@ -255,26 +259,30 @@ class TableWrapper extends Component {
       width,
     } = this.props;
 
+    // Create a ref for the SortableTable
+    const tableRef = React.createRef();
+
     return (
-      <SortableTable
-        getContainer={(wrappedInstance) =>
-          ReactDOM.findDOMNode(wrappedInstance.Grid)
-        }
-        gridClassName={className}
-        headerHeight={itemHeight}
-        height={height}
-        helperClass={helperClass}
-        onSortEnd={onSortEnd}
-        rowClassName={itemClass}
-        rowCount={items.length}
-        rowGetter={({index}) => items[index]}
-        rowHeight={itemHeight}
-        rowRenderer={(props) => <SortableRowRenderer {...props} />}
-        width={width}
-      >
-        <Column label="Index" dataKey="value" width={100} />
-        <Column label="Height" dataKey="height" width={width - 100} />
-      </SortableTable>
+      <div ref={tableRef}>
+        <SortableTable
+          ref={tableRef}
+          getContainer={getContainer}
+          gridClassName={className}
+          headerHeight={itemHeight}
+          height={height}
+          helperClass={helperClass}
+          onSortEnd={onSortEnd}
+          rowClassName={itemClass}
+          rowCount={items.length}
+          rowGetter={({index}) => items[index]}
+          rowHeight={itemHeight}
+          rowRenderer={(props) => <SortableRowRenderer {...props} />}
+          width={width}
+        >
+          <Column label="Index" dataKey="value" width={100} />
+          <Column label="Height" dataKey="height" width={width - 100} />
+        </SortableTable>
+      </div>
     );
   }
 }
